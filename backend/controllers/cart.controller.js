@@ -9,7 +9,7 @@ export const addToCart = async (req, res, next) => {
     if (existingItem) {
       existingItem.quantity += 1;
     } else {
-      user.cartItems.push({ product: productId, quantity: 1 });
+      user.cartItems.push({ productId, quantity: 1 });
     }
     await user.save();
     res.json(user.cartItems);
@@ -28,7 +28,7 @@ export const removeAllFromCart = async (req, res, next) => {
       user.cartItems = [];
     } else {
       user.cartItems = user.cartItems.filter(
-        (item) => item.productId !== productId
+        (item) => item.productId.toString() !== productId.toString()
       );
     }
     await user.save();
@@ -46,12 +46,12 @@ export const updateQuantity = async (req, res, next) => {
     const { quantity } = req.body;
     const user = req.user;
     const existingItem = user.cartItems.find(
-      (item) => item.productId.toString() == productId
+      (item) => item.productId.toString() === productId.toString()
     );
     if (existingItem) {
       if (quantity === 0) {
-        user.cartItems = user.cartItems.find(
-          (item) => item.productId !== productId
+        user.cartItems = user.cartItems.filter(
+          (item) => item.productId.toString() !== productId.toString()
         );
         await user.save();
         return res.json(user.cartItems);
@@ -71,14 +71,25 @@ export const updateQuantity = async (req, res, next) => {
       .json({ message: "Internal Server Error" + error.message });
   }
 };
-// export const getCartProducts = async (req, res, next) => {
-//   try {
-//     const user = req.user;
-//     res.json(user.cartItems);
-//   } catch (error) {
-//     console.log("Error in getCartProducts controller ", error.message);
-//     return res
-//       .status(500)
-//       .json({ message: "Internal Server Error" + error.message });
-//   }
-// };
+export const getCartProducts = async (req, res, next) => {
+  try {
+    const user = await req.user.populate("cartItems.productId");
+
+    const cartItems = user.cartItems.map((item) => ({
+      productId: item.productId._id,
+      price: item.productId.price,
+      description: item.productId.description,
+      image: item.productId.image,
+      category: item.productId.category,
+      name: item.productId.name,
+      isFeatured: item.productId.isFeatured,
+      quantity: item.quantity,
+    }));
+    return res.json(cartItems);
+  } catch (error) {
+    console.log("Error in getCartProducts controller ", error.message);
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error" + error.message });
+  }
+};
