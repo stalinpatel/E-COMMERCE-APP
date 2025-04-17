@@ -1,11 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingCart, LogOut, LogIn, Lock, UserPlus, Factory } from 'lucide-react';
+import { useUserStore } from '../store/useUserStore';
 
 const Navbar = () => {
-  const user = false;
+  const { user } = useUserStore();
   const cartItemCount = 3;
-  const isAdmin = false;
+  const isAdmin = !user?.role === "customer" || false;
+
 
   if (isAdmin && !user) {
     return (

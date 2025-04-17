@@ -34,6 +34,8 @@ const setCookies = (res, accessToken, refreshToken) => {
 export const signup = async (req, res, next) => {
   try {
     const { email, password, name } = req.body;
+    console.log("Signup endpoint hit by user :", name);
+
     const userExists = await User.findOne({ email });
 
     if (userExists) {
@@ -44,16 +46,17 @@ export const signup = async (req, res, next) => {
     const { accessToken, refreshToken } = generateTokens(user._id);
     await storeRefreshToken(user._id, refreshToken);
     setCookies(res, accessToken, refreshToken);
-
-    res.status(201).json({
-      message: "User registered successfully",
-      user: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
-    });
+    setTimeout(() => {
+      res.status(201).json({
+        message: "User registered successfully",
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        },
+      });
+    }, 3000);
   } catch (error) {
     console.log("Error in signup controller ", error.message);
     res.status(500).json({ message: error.message });
@@ -63,6 +66,7 @@ export const signup = async (req, res, next) => {
 export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
+    console.log("Login endpoint hit by user :", email);
     const user = await User.findOne({ email });
 
     // CHECK IF USER EXISTS OR NOT
@@ -81,15 +85,17 @@ export const login = async (req, res, next) => {
     await storeRefreshToken(user._id, refreshToken);
     setCookies(res, accessToken, refreshToken);
 
-    res.status(200).json({
-      message: "Login successful",
-      user: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
-    });
+    setTimeout(() => {
+      res.status(200).json({
+        message: "Login successful",
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        },
+      });
+    }, 1000);
   } catch (error) {
     console.log("Error in login controller ", error.message);
     res.status(500).json({ message: error.message });
@@ -126,7 +132,7 @@ export const refreshToken = async (req, res, next) => {
     const storedToken = await redish.get(`refresh_token:${decoded.userId}`);
 
     if (storedToken !== refreshToken) {
-      return res.status(500).json({ message: "Invalid refresh token" });
+      return res.status(403).json({ message: "Invalid refresh token" });
     }
 
     const accessToken = jwt.sign(
@@ -149,5 +155,43 @@ export const refreshToken = async (req, res, next) => {
   }
 };
 
-// TODO : implement getProfile
-// export const getProfile = async (req, res, next) => {};
+export const getProfile = async (req, res, next) => {
+  console.log("getProfile hitted");
+  try {
+    const accessToken = req.cookies.accessToken;
+    if (!accessToken) {
+      return res
+        .status(401)
+        .json({ message: "No access token found. Login again " });
+    }
+    let decoded;
+    try {
+      decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+    } catch (err) {
+      return res
+        .status(401)
+        .json({ message: "Invalid or expired access token." });
+    }
+
+    const user = await User.findById(decoded.userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    res.status(200).json({
+      message: "Authentication successful",
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.log("Error in getProfile controller", error.message);
+    return res.status(500).json({ message: "Server error," + error.message });
+  }
+};
+
+// TODO : Implement the axiox interceptors for refreshing the access token

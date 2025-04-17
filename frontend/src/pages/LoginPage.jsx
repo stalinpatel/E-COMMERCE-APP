@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, ArrowRight, Loader } from "lucide-react"
 import { motion } from "framer-motion"
+import { useUserStore } from '../store/useUserStore';
+
 
 const LoginPage = () => {
-  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -14,10 +16,15 @@ const LoginPage = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const { login, loading } = useUserStore()
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle signup logic here
-    console.log(formData);
+    const res = await login(formData)
+
+    if (res?.success) {
+      navigate("/")
+    }
   };
 
   return (

@@ -1,7 +1,7 @@
-import express from "express";
+// import express from "express";
 
-const router = express.router();
+// const router = express.Router();
 
-router.post("/create-checkout-session");
+// router.post("/create-checkout-session");
 
-export default router;
+// export default router;

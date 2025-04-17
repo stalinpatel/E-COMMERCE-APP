@@ -2,9 +2,14 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { UserPlus, Mail, Lock, User, ArrowRight, Loader } from "lucide-react"
 import { motion } from "framer-motion"
+import { useUserStore } from '../store/useUserStore';
+import { useNavigate } from "react-router-dom";
+
 
 const SignUpPage = () => {
-  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -12,14 +17,20 @@ const SignUpPage = () => {
     confirmPassword: ''
   });
 
+
+  const { signup, loading } = useUserStore()
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle signup logic here
-    console.log(formData);
+    const resp = await signup(formData)
+
+    if (resp?.success) {
+      navigate("/login");
+    }
   };
 
   return (
@@ -71,7 +82,7 @@ const SignUpPage = () => {
               <label className="block mb-1">Password</label>
               <Lock className='absolute bottom-2 left-2 opacity-50 scale-80' />
               <input
-                type="password"
+                type="text"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
@@ -84,7 +95,7 @@ const SignUpPage = () => {
               <label className="block mb-1">Confirm Password</label>
               <Lock className='absolute bottom-2 left-2 opacity-50 scale-80' />
               <input
-                type="password"
+                type="text"
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
