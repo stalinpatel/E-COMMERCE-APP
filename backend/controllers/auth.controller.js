@@ -21,7 +21,7 @@ const setCookies = (res, accessToken, refreshToken) => {
     httpOnly: true, //PREVENT XSS ATACKS
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict", //prevent CSRF attack,cross site request forgery attack
-    maxAge: 15 * 60 * 1000, //15 mins
+    maxAge: 7 * 24 * 60 * 60 * 1000, //15 mins 15 * 60 * 1000
   });
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true, //PREVENT XSS ATACKS
@@ -103,6 +103,8 @@ export const login = async (req, res, next) => {
 };
 
 export const logout = async (req, res, next) => {
+  console.log("logout endpoint hit");
+
   try {
     const refreshToken = req.cookies.refreshToken;
     if (refreshToken) {
