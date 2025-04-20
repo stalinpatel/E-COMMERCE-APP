@@ -29,7 +29,7 @@ const LoginPage = () => {
 
   return (
     <>
-      <div className="flex justify-center flex-col items-center min-h-screen bg-slate-950 text-white ">
+      <div className="flex pt-20 flex-col items-center min-h-screen bg-slate-950 text-white ">
         <motion.h2
           initial={{ opacity: 0, y: -20 }} // Start state
           animate={{ opacity: 1, y: 0 }} // End state

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { UserPlus, Mail, Lock, User, ArrowRight, Loader } from "lucide-react"
+import { UserPlus, Mail, Lock, User, ArrowRight } from "lucide-react"
 import { motion } from "framer-motion"
 import { useUserStore } from '../store/useUserStore';
 import { useNavigate } from "react-router-dom";
+import ButtonLoader from "../components/ButtonLoader"
 
 
 const SignUpPage = () => {
@@ -35,7 +36,7 @@ const SignUpPage = () => {
 
   return (
     <>
-      <div className="flex justify-center flex-col items-center min-h-screen bg-slate-950 text-white ">
+      <div className="flex pt-10 flex-col items-center min-h-screen bg-slate-950 text-white ">
         <motion.h2
           initial={{ opacity: 0, y: -20 }} // Start state
           animate={{ opacity: 1, y: 0 }} // End state
@@ -112,7 +113,7 @@ const SignUpPage = () => {
             >
               {
                 loading ? (
-                  <Loader className='animate-spin' />
+                  <ButtonLoader />
                 ) : (
                   <div className="flex tems-center justify-center gap-x-2">
                     Sign Up <UserPlus className='scale-80' />

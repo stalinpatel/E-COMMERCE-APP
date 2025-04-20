@@ -1,6 +1,7 @@
 import { redish } from "../lib/redish.js";
 import Product from "../models/product.model.js";
 import cloudinary from "../lib/cloudinary.js";
+import fs from "fs";
 
 const deleteImage = async (publicId) => {
   try {
@@ -8,6 +9,14 @@ const deleteImage = async (publicId) => {
     console.log("Deleted:", result);
   } catch {
     console.error("Error deleting image:", error);
+  }
+};
+
+const safeUnlink = (path) => {
+  try {
+    fs.unlinkSync(path);
+  } catch (err) {
+    console.warn("File deletion failed:", err.message);
   }
 };
 
@@ -50,11 +59,15 @@ export const featuredProducts = async (req, res, next) => {
 };
 
 export const createProduct = async (req, res, next) => {
+  console.log("CreateProduct endpoint hitted");
+
   try {
-    const { name, description, price, image, category } = req.body;
+    const { name, description, price, category, stock } = req.body;
+    const localPath = req.file?.path;
+    console.log("file isss:", req.file);
     let cloudinaryResponse = null;
-    if (image) {
-      cloudinaryResponse = await cloudinary.uploader.upload(image, {
+    if (localPath) {
+      cloudinaryResponse = await cloudinary.uploader.upload(localPath, {
         folder: "products",
       });
     }
@@ -63,12 +76,14 @@ export const createProduct = async (req, res, next) => {
       description,
       price,
       category,
+      stock,
       image: cloudinaryResponse?.secure_url
         ? cloudinaryResponse?.secure_url
         : "",
       publicId: cloudinaryResponse.public_id,
     });
 
+    safeUnlink(localPath);
     res.status(201).json(product);
   } catch (error) {
     console.log("Error in createProduct controller ", error.message);
@@ -139,7 +154,8 @@ export const getProductsByCategory = async (req, res, next) => {
 export const toggleFeaturedProduct = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const product = Product.findById(id);
+    console.log("toggleFeaturedProduct endpoint hit by userid :", id);
+    const product = await Product.findById(id);
     if (product) {
       product.isFeatured = !product.isFeatured;
       const updatedProduct = await product.save();
@@ -152,7 +168,7 @@ export const toggleFeaturedProduct = async (req, res, next) => {
     console.log("Error in toggleFeaturedProduct controller ", error.message);
     return res
       .status(500)
-      .json({ message: "Internal Server Error" + error.message });
+      .json({ message: "Internal Server Error " + error.message });
   }
 };
 
