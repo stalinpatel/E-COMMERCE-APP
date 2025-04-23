@@ -9,9 +9,8 @@ import {
 
 const router = express.Router();
 
-router.get("/", protectRoute, getCartProducts);
-router.post("/", protectRoute, addToCart);
-router.delete("/", protectRoute, removeAllFromCart);
-router.put("/:id", protectRoute, updateQuantity); //either - or +
-
+router.get("/", protectRoute, getCartProducts); // DONE
+router.post("/", protectRoute, addToCart); // DONE
+router.delete("/", protectRoute, removeAllFromCart); // DONE
+router.put("/:id", protectRoute, updateQuantity); // DONE
 export default router;

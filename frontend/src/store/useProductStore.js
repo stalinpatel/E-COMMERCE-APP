@@ -3,7 +3,9 @@ import { create } from "zustand";
 import { toast } from "react-hot-toast";
 
 export const useProductStore = create((set, get) => ({
-  products: [],
+  allProducts: [], // renamed
+  categoryProducts: [], // new
+  featuredProducts: [], // future use
   singleProduct: {},
   loading: false,
   screenLoading: false,
@@ -16,13 +18,17 @@ export const useProductStore = create((set, get) => ({
       for (const key in formInputData) {
         formData.append(key, formInputData[key]);
       }
+
       const res = await axios.post("/products/", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
+
+      const newProduct = res.data?.product;
+      const currentProducts = get().allProducts; // changed
+      set({ allProducts: [newProduct, ...currentProducts], loading: false }); // changed
       toast.success("Product created successfully");
-      set({ loading: false });
       return { success: true };
     } catch (error) {
       console.error("Error creating product:", error);
@@ -36,7 +42,7 @@ export const useProductStore = create((set, get) => ({
     try {
       set({ screenLoading: true });
       const res = await axios.get("/products");
-      set({ screenLoading: false, products: res.data?.products });
+      set({ screenLoading: false, allProducts: res.data?.products }); // changed
       return { success: true };
     } catch (error) {
       console.log("Error fetching all products");
@@ -49,11 +55,11 @@ export const useProductStore = create((set, get) => ({
     try {
       const res = await axios.patch(`/products/${id}`);
       const newProduct = res.data?.updatedProduct;
-      const currentProduct = get().products;
+      const currentProduct = get().allProducts; // changed
       const updatedProducts = currentProduct.map((p) =>
         p._id === id ? { ...p, isFeatured: newProduct.isFeatured } : p
       );
-      set({ products: updatedProducts });
+      set({ allProducts: updatedProducts }); // changed
       toast.success(res?.data?.message);
       return { success: true };
     } catch (error) {
@@ -62,7 +68,7 @@ export const useProductStore = create((set, get) => ({
         error?.response?.data?.message
       );
       toast.error(
-        error?.response?.data?.message || "Unable to toogle featured"
+        error?.response?.data?.message || "Unable to toggle featured"
       );
       return false;
     }
@@ -72,9 +78,9 @@ export const useProductStore = create((set, get) => ({
     try {
       set({ screenLoading: true });
       const res = await axios.delete(`/products/${id}`);
-      const currentProduct = get().products;
+      const currentProduct = get().allProducts; // changed
       const updatedProducts = currentProduct.filter((p) => p._id !== id);
-      set({ products: updatedProducts });
+      set({ allProducts: updatedProducts }); // changed
       toast.success(res?.data?.message || "Product deleted");
       set({ screenLoading: false });
       return { success: true };
@@ -83,6 +89,38 @@ export const useProductStore = create((set, get) => ({
       toast.error(
         error?.response?.data?.message || "Product couldn't be deleted"
       );
+      return false;
+    }
+  },
+
+  fetchProductByCategory: async (category) => {
+    try {
+      set({ screenLoading: true });
+      const res = await axios.get(`/products/category/${category}`);
+      set({ categoryProducts: res.data || [], screenLoading: false }); // new key
+      return { success: true };
+    } catch (error) {
+      console.log("Error fetching products :", error.message);
+      toast.error(
+        error?.response?.data?.message || "Product couldn't be fetched"
+      );
+      set({ screenLoading: false });
+      return false;
+    }
+  },
+
+  getFeaturedProducts: async () => {
+    try {
+      set({ screenLoading: true });
+      const res = await axios.get("/products/featured");
+      set({ featuredProducts: res.data || [], screenLoading: false }); // new key
+      return { success: true };
+    } catch (error) {
+      console.log("Error fetching products :", error.message);
+      toast.error(
+        error?.response?.data?.message || "Product couldn't be fetched"
+      );
+      set({ screenLoading: false });
       return false;
     }
   },

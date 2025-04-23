@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { PlusCircle, ShoppingBasket, BarChart } from "lucide-react"
+import { useNavigate } from "react-router-dom";
+import { PlusCircle, ShoppingBasket, BarChart, TicketPercent } from "lucide-react"
 import { motion } from "framer-motion"
-import { useUserStore } from '../store/useUserStore';
 import CreateProductForm from '../components/CreateProductForm';
 import AnalyticsTab from "../components/AnalyticsTab"
 import ProductsList from "../components/ProductsList"
+import CouponsTab from '../components/CouponsTab';
 import { useProductStore } from '../store/useProductStore';
-
-
-
 
 const AdminPage = () => {
     const tabs = [
         { id: "create", label: "Create Product", icon: PlusCircle },
         { id: "products", label: "Products", icon: ShoppingBasket },
+        { id: "coupons", label: "Coupons", icon: TicketPercent },
         { id: "analytics", label: "Analytics", icon: BarChart },
     ]
     const [activeTab, setActiveTab] = useState("create")
@@ -22,6 +21,7 @@ const AdminPage = () => {
     useEffect(() => {
         getAllProducts();
     }, []);
+
 
 
     return (
@@ -50,6 +50,7 @@ const AdminPage = () => {
             {activeTab === "create" && <CreateProductForm />}
             {activeTab === "products" && <ProductsList />}
             {activeTab === "analytics" && <AnalyticsTab />}
+            {activeTab === "coupons" && <CouponsTab />}
 
         </div >
     );

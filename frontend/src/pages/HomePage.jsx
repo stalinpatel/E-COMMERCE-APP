@@ -1,51 +1,65 @@
-import React from 'react';
-import { href, Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { useProductStore } from '../store/useProductStore';
+import { useCartStore } from "../store/useCartStore"
+import ProductCardSkeleton from '../components/ProductCardSkeleton';
+import { useUserStore } from "../store/useUserStore"
+
 
 const HomePage = () => {
   const categories = [
     {
       id: 1,
       name: 'Jeans',
-      href: "/jeans",
+      slug: 'jean',
       imageUrl: './jeans.png',
     },
     {
       id: 2,
       name: 'Shoes',
-      href: "/shoes",
+      slug: 'shoe',
       imageUrl: './shoes.png',
     },
     {
       id: 3,
       name: 'Glasses',
-      href: "/glasses",
+      slug: 'glasses',
       imageUrl: './glasses.png',
-    }, {
+    },
+    {
       id: 4,
       name: 'Jackets',
-      href: "/jackets",
+      slug: 'jacket',
       imageUrl: './jackets.png',
-    }, {
+    },
+    {
       id: 5,
       name: 'Suits',
-      href: "/suits",
+      slug: 'suit',
       imageUrl: './suits.png',
     },
     {
       id: 6,
       name: 'Bags',
-      href: "/bags",
+      slug: 'bag',
       imageUrl: './bags.png',
     },
     {
       id: 7,
       name: 'T-shirts',
-      href: "/tshirts",
+      slug: 't-shirt',
       imageUrl: './tshirts.png',
     },
+    {
+      id: 8,
+      name: "Accessories",
+      slug: "accessories",
+      imageUrl: "./accessories.png"
+
+    }
   ];
 
-  const featuredProducts = [
+  const categoryProducts2 = [
     {
       id: 1,
       name: 'Wireless Headphones',
@@ -78,6 +92,17 @@ const HomePage = () => {
     },
   ];
 
+  const { getFeaturedProducts, featuredProducts, screenLoading } = useProductStore()
+  const { totalItems, calculateCartTotals, getCartProducts } = useCartStore()
+  const { user } = useUserStore();
+
+  useEffect(() => {
+    getFeaturedProducts();
+    if (user) {
+      getCartProducts();
+    }
+  }, [])
+
   return (
     <div className="w-full min-h-screen bg-slate-950 text-white px-20 ">
       {/* Categories */}
@@ -87,7 +112,7 @@ const HomePage = () => {
           {categories.map((category) => (
             <Link
               key={category.id}
-              to={`/category${category.href}`}
+              to={`/category/${category.slug}`}
               className="relative group bg-slate-800 rounded-xl overflow-hidden shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300"
             >
               <img
@@ -104,33 +129,42 @@ const HomePage = () => {
       </section >
 
       {/* Featured Products */}
-      < section className="py-14 px-6" >
+      <section className="py-14 px-6">
         <h2 className="text-4xl font-bold text-center mb-12">🔥 Featured Products</h2>
         <div className='flex justify-center'>
-
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 ">
-            {featuredProducts.map((product) => (
-              <div
-                key={product.id}
-                className="bg-slate-800 rounded-xl overflow-hidden shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300 relative"
-              >
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-48 object-cover"
-                />
-                <div className="p-4">
-                  <h3 className="text-xl font-semibold mb-1">{product.name}</h3>
-                  <p className="text-pink-400 font-bold">${product.price}</p>
-                </div>
-                <span className="absolute top-2 right-2 bg-pink-600 text-white text-xs px-3 py-1 rounded-full">
-                  Featured
-                </span>
-              </div>
-            ))}
+            {
+              screenLoading
+                ? Array.from({ length: 8 }).map((_, index) => (
+                  <ProductCardSkeleton key={index} />
+                ))
+                :
+                featuredProducts.length === 0 ? (
+                  <div className="col-span-full flex items-center justify-center ">
+                    <div className="text-gray-400 text-2xl px-6 py-4 rounded-xl font-bold text-center">
+                      No Featured Products Found
+                    </div>
+                  </div>
+                ) :
+                  featuredProducts.map((product) => (
+                    <div
+                      key={product._id}
+                      className="bg-slate-800 rounded-xl overflow-hidden shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300 relative"
+                    >
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-48 object-cover"
+                      />
+                      <div className="p-4">
+                        <h3 className="text-xl font-semibold mb-1">{product.name}</h3>
+                        <p className="text-pink-400 font-bold">${product.price}</p>
+                      </div>
+
+                    </div>
+                  ))}
           </div>
         </div>
-
       </section>
     </div >
   );

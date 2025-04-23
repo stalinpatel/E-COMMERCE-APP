@@ -2,22 +2,23 @@ import React, { useEffect } from 'react';
 import { Trash2, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useProductStore } from '../store/useProductStore';
-import LoadingSpinner from "../components/LoadingSpinner"
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const ProductsList = () => {
 
-  const { screenLoading, products, toggleFeaturedProduct, deleteProduct } = useProductStore();
-
+  // 🔁 Updated from `products` to `allProducts`
+  const { screenLoading, allProducts, toggleFeaturedProduct, deleteProduct } = useProductStore();
 
   const handleFeatureClick = (id) => {
-    toggleFeaturedProduct(id)
-  }
+    toggleFeaturedProduct(id);
+  };
 
   const handleDeleteClick = (id) => {
-    deleteProduct(id)
-  }
+    deleteProduct(id);
+  };
+
   if (screenLoading) {
-    return (<LoadingSpinner />)
+    return <LoadingSpinner />;
   }
 
   return (
@@ -37,40 +38,43 @@ const ProductsList = () => {
               <th>Price</th>
               <th>Category</th>
               <th>In Stock</th>
-              <th >Featured</th>
+              <th>Featured</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {products.map(product => {
-              return (
-
-                <tr key={product._id} className="bg-slate-800 rounded-lg text-sm">
-                  <td className="flex items-center gap-3 p-3 rounded-l-lg cursor-pointer">
-                    <img src={product.image} alt={product.name} className="w-10 h-10 object-cover rounded-full border border-pink-400 cursor-pointer" />
-                    {product.name}
-                  </td>
-                  <td>{product.price} ₹</td>
-                  <td>{product.category}</td>
-                  <td className='pl-5'>{product.stock}</td>
-                  <td className='pl-5'>
-                    <button onClick={() => handleFeatureClick(product._id)} className='hover:scale-103 active:scale-110 transition duration-200'>
-                      {product.isFeatured ? (
-                        <Star className="text-yellow-400 fill-yellow-400 inline cursor-pointer" />
-                      ) : (
-                        <Star className="text-yellow-400 inline cursor-pointer" />
-                      )
-                      }
-                    </button>
-                  </td>
-                  <td className="pl-4 rounded-r-lg ">
-                    <button onClick={() => handleDeleteClick(product._id)} className="hover:text-red-600 transition cursor-pointer hover:scale-103 active:scale-110 duration-100">
-                      <Trash2 />
-                    </button>
-                  </td>
-                </tr>
-              )
-            })}
+            {allProducts.map(product => (
+              <tr key={product._id} className="bg-slate-800 rounded-lg text-sm">
+                <td className="flex items-center gap-3 p-3 rounded-l-lg cursor-pointer">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-10 h-10 object-cover rounded-full border border-pink-400 cursor-pointer"
+                  />
+                  {product.name}
+                </td>
+                <td>{product.price} ₹</td>
+                <td>{product.category}</td>
+                <td className="pl-5">{product.stock}</td>
+                <td className="pl-5">
+                  <button onClick={() => handleFeatureClick(product._id)} className="hover:scale-103 active:scale-110 transition duration-200">
+                    {product.isFeatured ? (
+                      <Star className="text-yellow-400 fill-yellow-400 inline cursor-pointer" />
+                    ) : (
+                      <Star className="text-yellow-400 inline cursor-pointer" />
+                    )}
+                  </button>
+                </td>
+                <td className="pl-4 rounded-r-lg">
+                  <button
+                    onClick={() => handleDeleteClick(product._id)}
+                    className="hover:text-red-600 transition cursor-pointer hover:scale-103 active:scale-110 duration-100"
+                  >
+                    <Trash2 />
+                  </button>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

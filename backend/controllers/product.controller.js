@@ -20,6 +20,7 @@ const safeUnlink = (path) => {
   }
 };
 
+// DONE
 export const getAllProducts = async (req, res, next) => {
   try {
     const products = await Product.find({});
@@ -32,6 +33,7 @@ export const getAllProducts = async (req, res, next) => {
   }
 };
 
+// DONE
 export const featuredProducts = async (req, res, next) => {
   try {
     const featuredProducts = await redish.get("featured_products");
@@ -42,6 +44,7 @@ export const featuredProducts = async (req, res, next) => {
     // LEAN() - will return a plain js object instead of mongodb document which is good  for performance
     featuredProducts = await Product.find({ isFeatured: true }).lean();
 
+    console.log("featuredProducts", featuredProducts);
     if (!featuredProducts) {
       return res.status(404).json({ message: "No feature products found" });
     }
@@ -58,6 +61,7 @@ export const featuredProducts = async (req, res, next) => {
   }
 };
 
+// DONE
 export const createProduct = async (req, res, next) => {
   console.log("CreateProduct endpoint hitted");
 
@@ -93,6 +97,7 @@ export const createProduct = async (req, res, next) => {
   }
 };
 
+// DONE
 export const deleteProduct = async (req, res, next) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -138,6 +143,7 @@ export const getRecommendations = async (req, res, next) => {
   }
 };
 
+// DONE
 export const getProductsByCategory = async (req, res, next) => {
   try {
     const { category } = req.params;
@@ -151,10 +157,10 @@ export const getProductsByCategory = async (req, res, next) => {
   }
 };
 
+// DONE
 export const toggleFeaturedProduct = async (req, res, next) => {
   try {
     const { id } = req.params;
-    console.log("toggleFeaturedProduct endpoint hit by userid :", id);
     const product = await Product.findById(id);
     if (product) {
       product.isFeatured = !product.isFeatured;

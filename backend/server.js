@@ -14,9 +14,9 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json()); //allows you to parse the body of the request
 app.use(cookieParser());
 
-app.use("/api/auth", authRoutes);
-app.use("/api/products", productRoutes);
-app.use("/api/cart", cartRoutes);
+app.use("/api/auth", authRoutes); // DONE
+app.use("/api/products", productRoutes); // DONE 1left - productRecommendation
+app.use("/api/cart", cartRoutes); // DONE
 app.use("/api/coupons", couponRoutes);
 // app.use("/api/payments", paymentRoutes);
 
@@ -24,3 +24,7 @@ app.listen(5000, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
   connectDB();
 });
+
+// TODO - ADD SORT FUNCTION IN COUPONS
+// 1- SORT BY EXPIRY DATE
+// 2- SORT BY DATE CREATED

@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
+import CategoryPage from "./pages/CategoryPage";
 import NotFound from './pages/NotFound';
 import Navbar from "./components/Navbar";
 import AdminPage from "./pages/AdminPage";
@@ -9,6 +10,7 @@ import ToasterComponent from "./components/ToasterComponent"
 import { useUserStore } from "./store/useUserStore";
 import { useEffect } from "react";
 import LoadingSpinner from "./components/LoadingSpinner";
+import CartPage from "./pages/CartPage";
 
 
 function App() {
@@ -22,7 +24,7 @@ function App() {
   if (checkingAuth) {
     return <LoadingSpinner />
   }
-  console.log('User detils 0', user);
+  console.log('User detils :', user);
 
 
   return (
@@ -40,7 +42,9 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/signup" element={!user ? <SignUpPage /> : <Navigate to="/" />} />
               <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/" />} />
-              <Route path="/secret-dashboard" element={user?.role == "admin" ? <AdminPage /> : <Navigate to="/login" />} />
+              <Route path="/secret-dashboard" element={user?.role == "admin" && user ? <AdminPage /> : <Navigate to="/login" />} />
+              <Route path="/category/:category" element={<CategoryPage />} />
+              <Route path="/cart" element={user ? <CartPage /> : <Navigate to="/login" />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>

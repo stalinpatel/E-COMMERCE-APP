@@ -1,3 +1,4 @@
+// DONE
 export const addToCart = async (req, res, next) => {
   try {
     const { productId } = req.body;
@@ -20,9 +21,12 @@ export const addToCart = async (req, res, next) => {
       .json({ message: "Internal Server Error" + error.message });
   }
 };
+
+// DONE
 export const removeAllFromCart = async (req, res, next) => {
   try {
     const { productId } = req.body;
+    console.log("removeAllFromCart endpoint hit with productId:", productId);
     const user = req.user;
     if (!productId) {
       user.cartItems = [];
@@ -40,6 +44,8 @@ export const removeAllFromCart = async (req, res, next) => {
       .json({ message: "Internal Server Error" + error.message });
   }
 };
+
+// DONE
 export const updateQuantity = async (req, res, next) => {
   try {
     const { id: productId } = req.params;
@@ -60,10 +66,8 @@ export const updateQuantity = async (req, res, next) => {
       await user.save();
       return res.json(user.cartItems);
     } else {
-      res.status(404).json({ message: "Product not found" });
+      return res.status(404).json({ message: "Product not found" });
     }
-
-    res.json(user.cartItems);
   } catch (error) {
     console.log("Error in updateQuantity controller ", error.message);
     return res
@@ -71,6 +75,8 @@ export const updateQuantity = async (req, res, next) => {
       .json({ message: "Internal Server Error" + error.message });
   }
 };
+
+// DONE
 export const getCartProducts = async (req, res, next) => {
   try {
     const user = await req.user.populate("cartItems.productId");

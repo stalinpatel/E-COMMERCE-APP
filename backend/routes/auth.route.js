@@ -9,14 +9,14 @@ import {
 
 const router = express.Router();
 
-router.post("/signup", signup);
+router.post("/signup", signup);// DONE
 
-router.post("/login", login);
+router.post("/login", login);// DONE
 
-router.post("/logout", logout);
+router.post("/logout", logout);// DONE
 
-router.post("/refresh-token", refreshToken);
+router.post("/refresh-token", refreshToken);// DONE
 
-router.get("/profile", getProfile);
+router.get("/profile", getProfile);// DONE
 
 export default router;

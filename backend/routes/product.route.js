@@ -13,19 +13,19 @@ import {
 
 const router = express.Router();
 
-router.get("/", protectRoute, adminRoute, getAllProducts);
+router.get("/", protectRoute, adminRoute, getAllProducts); // DONE
 router.post(
   "/",
   protectRoute,
   adminRoute,
   upload.single("image"),
   createProduct
-);
-router.patch("/:id", protectRoute, adminRoute, toggleFeaturedProduct);
-router.delete("/:id", protectRoute, adminRoute, deleteProduct);
+); // DONE
+router.patch("/:id", protectRoute, adminRoute, toggleFeaturedProduct); // DONE
+router.delete("/:id", protectRoute, adminRoute, deleteProduct); // DONE
 
 router.get("/recommendations", getRecommendations);
-router.get("/featured", featuredProducts);
-router.get("/category/:category", getProductsByCategory);
+router.get("/featured", featuredProducts); // DONE
+router.get("/category/:category", getProductsByCategory); // DONE
 
 export default router;
