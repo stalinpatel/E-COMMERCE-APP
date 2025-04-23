@@ -7,7 +7,7 @@ import { useCartStore } from '../store/useCartStore';
 
 
 
-const AdminNav = ({ handleLogout }) => {
+const AdminNav = ({ handleLogout, cartItemCount }) => {
   return (
     <nav className="flex justify-between items-center p-4 bg-slate-900 shadow-lg fixed top-0 left-0 w-full z-50">
       {/* Logo */}
@@ -17,6 +17,20 @@ const AdminNav = ({ handleLogout }) => {
 
       {/* Navigation Links */}
       <div className="flex items-center gap-4">
+        <Link
+          to="/cart"
+          className="text-white hover:text-pink-400 flex gap-x-1"
+        >
+          <div className='relative'>
+            {cartItemCount > 0 && (
+              <span className="absolute -top-2 -left-2 bg-pink-400 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                {cartItemCount}
+              </span>
+            )}
+            <ShoppingCart />
+          </div>
+          Cart
+        </Link>
         <Link
           to="/secret-dashboard"
           className="text-white hover:text-pink-400"
@@ -124,7 +138,7 @@ const Navbar = () => {
 
 
   return isAdmin
-    ? <AdminNav handleLogout={handleLogout} />
+    ? <AdminNav handleLogout={handleLogout} cartItemCount={totalItems} />
     : user
       ? <UserNav handleLogout={handleLogout} cartItemCount={totalItems} />
       : <GuestNav />;
