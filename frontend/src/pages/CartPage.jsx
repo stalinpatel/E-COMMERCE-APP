@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useCartStore } from '../store/useCartStore';
+import { motion } from "framer-motion"
 import { Trash2, CrossIcon } from 'lucide-react';
 import CartPageSkeleton from "../components/skeletons/CartPageSkeleton"
 import PinkButtonSpinner from "../components/PinkButtonSpinner"
 import NoCartItemsFound from '../components/NoCartItemsFound';
 import toast from 'react-hot-toast';
+import { Link } from 'react-router-dom';
 
 const CartPage = () => {
-    const { cartItems, getCartProducts, removeAllFromCart, totalPrice, screenLoading, updateQuantity, getAllCoupons, coupons, validateCoupon, couponApplied, removeCoupon } = useCartStore();
+    const { cartItems, getCartProducts, removeAllFromCart, totalPrice, discountedPrice, screenLoading, updateQuantity, getAllCoupons, coupons, validateCoupon, couponApplied, removeCoupon } = useCartStore();
     const [deletingItemId, setDeletingItemId] = useState(null);
     const [inputCode, setInputCode] = useState("")
 
@@ -61,7 +63,10 @@ const CartPage = () => {
                 {/* Cart Items - Left */}
                 <div className="flex-1 space-y-6">
                     {cartItems.map((item) => (
-                        <div
+                        <motion.div
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.5 }}
                             key={item.productId}
                             className="flex items-center bg-slate-800 rounded-2xl shadow-md p-4 sm:p-6 gap-6"
                         >
@@ -110,14 +115,18 @@ const CartPage = () => {
                                     <Trash2 size={20} />
                                 )}
                             </button>
-                        </div>
+                        </motion.div>
                     ))}
                 </div>
 
                 {/* Right Panel - Summary & Coupon */}
                 <div className="w-full lg:w-[350px] space-y-6">
                     {/* Coupon Panel */}
-                    <div className="bg-slate-800 p-6 rounded-2xl shadow-md space-y-4">
+                    <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="bg-slate-800 p-6 rounded-2xl shadow-md space-y-4">
                         <h4 className="text-xl font-semibold text-white">Have a Coupon?</h4>
                         <div className='relative'>
                             <input
@@ -178,28 +187,37 @@ const CartPage = () => {
 
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
 
 
                     {/* Order Summary */}
-                    <div className="bg-slate-800 p-6 rounded-2xl shadow-md space-y-4">
+                    <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="bg-slate-800 p-6 rounded-2xl shadow-md space-y-4">
                         <h4 className="text-xl font-semibold text-white">Order Summary</h4>
                         <div className="flex justify-between text-pink-400">
                             <span>Original Price:</span>
                             <span>₹ {totalPrice}</span>
                         </div>
+                        <div className="flex justify-between text-gray-400 font-semibold text-sm">
+                            <span>Coupon:</span>
+                            <span>{(totalPrice * couponApplied.discountPercentage * 0.01) || 0}</span>
+                        </div>
                         <div className="flex justify-between text-white font-bold text-lg">
                             <span>Total:</span>
-                            <span>₹611.00</span>
+                            <span>₹ {(discountedPrice ? discountedPrice : totalPrice).toFixed(2)}</span>
                         </div>
                         <button className="w-full mt-4 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-2xl transition-all">
                             Proceed to Checkout
                         </button>
-                        <p className="text-center text-sm text-pink-400 mt-2 cursor-pointer hover:underline">
-                            Continue Shopping →
-                        </p>
-                    </div>
-
+                        <Link to={"/"}>
+                            <p className="text-center text-sm text-pink-400 mt-2 cursor-pointer hover:underline">
+                                Continue Shopping →
+                            </p>
+                        </Link>
+                    </motion.div>
                 </div>
             </div>
         </div>

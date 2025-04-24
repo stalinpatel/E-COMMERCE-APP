@@ -16,6 +16,6 @@ router.post("/", adminRoute, createCoupon); //DONE
 router.delete("/:id", adminRoute, deleteCoupon); //DONE
 router.patch("/:id", adminRoute, editCoupon); //DONE
 router.patch("/toggle-status/:id", adminRoute, toggleActiveStatus); //DONE
-router.post("/validate", protectRoute, validateCoupon);
+router.post("/validate", protectRoute, validateCoupon); //DONE
 
 export default router;

@@ -17,7 +17,7 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes); // DONE
 app.use("/api/products", productRoutes); // DONE 1left - productRecommendation
 app.use("/api/cart", cartRoutes); // DONE
-app.use("/api/coupons", couponRoutes); // DONE 1left - validateCoupon
+app.use("/api/coupons", couponRoutes); // DONE 
 // app.use("/api/payments", paymentRoutes);
 
 app.listen(5000, () => {

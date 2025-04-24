@@ -12,13 +12,14 @@ export const useCartStore = create((set, get) => ({
   cartItems: [],
   totalItems: 0,
   totalPrice: 0,
+  discountedPrice: 0,
   buttonLoading: false,
   screenLoading: false,
   coupons: [],
   couponApplied: initialCouponState,
 
   calculateCartTotals: () => {
-    const { cartItems } = get();
+    const { cartItems, couponApplied } = get();
 
     const totalItems = cartItems.reduce(
       (sum, item) => sum + Number(item.quantity || 0),
@@ -28,7 +29,12 @@ export const useCartStore = create((set, get) => ({
       (sum, item) => sum + Number(item.quantity || 0) * Number(item.price || 0),
       0
     );
-
+    if (couponApplied.isVerified) {
+      set({
+        discountedPrice:
+          totalPrice - totalPrice * couponApplied.discountPercentage * 0.01,
+      });
+    }
     set({ totalItems, totalPrice });
   },
 
@@ -56,7 +62,7 @@ export const useCartStore = create((set, get) => ({
   getCartProducts: async () => {
     try {
       set({ screenLoading: true });
-      const res = await axios.get("/cart");
+      const res = await axios.get("/cart/");
       set({ cartItems: res.data, screenLoading: false });
       get().calculateCartTotals(); // ✅ Call it here
       return { success: true };
@@ -136,7 +142,6 @@ export const useCartStore = create((set, get) => ({
 
   validateCoupon: async (code) => {
     try {
-      console.log("Validating :", code);
       const res = await axios.post("/coupons/validate", { code });
       set((state) => ({
         couponApplied: {
@@ -146,13 +151,13 @@ export const useCartStore = create((set, get) => ({
           discountPercentage: res.data?.discountPercentage,
         },
       }));
-      console.log("coupon :", res.data);
       toast.success(
         `'${get().couponApplied.code || "Coupon"}'  applied successfully`,
         {
           id: res.data?.code,
         }
       );
+      get().calculateCartTotals();
       return { success: true };
     } catch (error) {
       if (error?.response?.status === 404) {
@@ -177,6 +182,7 @@ export const useCartStore = create((set, get) => ({
 
   removeCoupon: () => {
     set({ couponApplied: initialCouponState });
+    get().calculateCartTotals();
     toast.success("Coupon Removed");
   },
 }));

@@ -81,6 +81,7 @@ export const getCartProducts = async (req, res, next) => {
   try {
     const user = await req.user.populate("cartItems.productId");
 
+    console.log("User :", user);
     const cartItems = user.cartItems.map((item) => ({
       productId: item.productId._id,
       price: item.productId.price,
@@ -91,7 +92,7 @@ export const getCartProducts = async (req, res, next) => {
       isFeatured: item.productId.isFeatured,
       quantity: item.quantity,
     }));
-    return res.json(cartItems);
+    return res.status(200).json(cartItems);
   } catch (error) {
     console.log("Error in getCartProducts controller ", error.message);
     return res
