@@ -9,7 +9,7 @@ import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 
 const CartPage = () => {
-    const { cartItems, getCartProducts, removeAllFromCart, totalPrice, discountedPrice, screenLoading, updateQuantity, getAllCoupons, coupons, validateCoupon, couponApplied, removeCoupon } = useCartStore();
+    const { cartItems, getCartProducts, removeAllFromCart, totalPrice, discountedPrice, discount, screenLoading, updateQuantity, getAllCoupons, coupons, validateCoupon, couponApplied, removeCoupon, evaluateCartTotals } = useCartStore();
     const [deletingItemId, setDeletingItemId] = useState(null);
     const [inputCode, setInputCode] = useState("")
 
@@ -47,6 +47,10 @@ const CartPage = () => {
     const handleRemoveCoupon = () => {
         setInputCode("")
         removeCoupon()
+    }
+
+    const handleCheckout = () => {
+        evaluateCartTotals();
     }
 
     if (screenLoading) {
@@ -199,17 +203,17 @@ const CartPage = () => {
                         <h4 className="text-xl font-semibold text-white">Order Summary</h4>
                         <div className="flex justify-between text-pink-400">
                             <span>Original Price:</span>
-                            <span>₹ {totalPrice}</span>
+                            <span>₹ {totalPrice.toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between text-gray-400 font-semibold text-sm">
                             <span>Coupon:</span>
-                            <span>{(totalPrice * couponApplied.discountPercentage * 0.01) || 0}</span>
+                            <span>{(discount ? discount : totalPrice * couponApplied.discountPercentage * 0.01).toFixed(2) || 0}</span>
                         </div>
                         <div className="flex justify-between text-white font-bold text-lg">
                             <span>Total:</span>
                             <span>₹ {(discountedPrice ? discountedPrice : totalPrice).toFixed(2)}</span>
                         </div>
-                        <button className="w-full mt-4 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-2xl transition-all">
+                        <button onClick={handleCheckout} className="w-full mt-4 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-2xl transition-all">
                             Proceed to Checkout
                         </button>
                         <Link to={"/"}>

@@ -12,6 +12,7 @@ export const useCartStore = create((set, get) => ({
   cartItems: [],
   totalItems: 0,
   totalPrice: 0,
+  discount: 0,
   discountedPrice: 0,
   buttonLoading: false,
   screenLoading: false,
@@ -184,5 +185,28 @@ export const useCartStore = create((set, get) => ({
     set({ couponApplied: initialCouponState });
     get().calculateCartTotals();
     toast.success("Coupon Removed");
+  },
+
+  evaluateCartTotals: async () => {
+    try {
+      const { couponApplied } = get();
+      const res = await axios.post("/cart/evaluate-totals", {
+        code: couponApplied.code,
+      });
+      console.log("Total price fetched :", res.data?.total);
+      toast.success(`Total price fetched :${res.data?.total}`);
+      set({
+        totalPrice: res.data?.originalTotal,
+        discount: res.data?.discount,
+        discountedPrice: res.data?.total,
+      });
+      return { success: true };
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message || "Total couldn't be calculated"
+      );
+      console.log("Error in evaluateCartTotals :", error.message);
+      return false;
+    }
   },
 }));

@@ -1,3 +1,5 @@
+import Coupon from "../models/coupon.model.js";
+
 // DONE
 export const addToCart = async (req, res, next) => {
   try {
@@ -81,7 +83,6 @@ export const getCartProducts = async (req, res, next) => {
   try {
     const user = await req.user.populate("cartItems.productId");
 
-    console.log("User :", user);
     const cartItems = user.cartItems.map((item) => ({
       productId: item.productId._id,
       price: item.productId.price,
@@ -98,5 +99,43 @@ export const getCartProducts = async (req, res, next) => {
     return res
       .status(500)
       .json({ message: "Internal Server Error" + error.message });
+  }
+};
+
+export const evaluateCartTotals = async (req, res, next) => {
+  try {
+    const user = await req.user.populate("cartItems.productId");
+    const { code } = req.body;
+
+    let total = 0;
+    let originalTotal = user.cartItems.reduce(
+      (sum, item) =>
+        sum + Number(item.quantity || 0) * Number(item?.productId?.price || 0),
+      0
+    );
+    total = originalTotal;
+    if (code) {
+      const coupon = await Coupon.findOne({ code });
+
+      if (coupon && coupon.isActive && coupon.expirationDate > Date.now()) {
+        total -= total * (coupon.discountPercentage / 100);
+      }
+    }
+
+    // Round all values to 2 decimal places
+    total = parseFloat(total.toFixed(2));
+    originalTotal = parseFloat(originalTotal.toFixed(2));
+    const discount = parseFloat((originalTotal - total).toFixed(2));
+
+    return res.status(200).json({
+      total,
+      originalTotal,
+      discount,
+    });
+  } catch (error) {
+    console.log("Error in evaluateCartTotals controller:", error.message);
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error: " + error.message });
   }
 };
