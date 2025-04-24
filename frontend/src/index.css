@@ -3,3 +3,25 @@
 /* * {
   outline: 1px solid red;
 } */
+/* index.css */
+.scrollbar-hide::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar-hide::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-hide::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.6); /* black shade */
+  border-radius: 10px;
+  transition: opacity 0.3s;
+}
+
+.scrollbar-hide:hover::-webkit-scrollbar-thumb {
+  opacity: 1;
+}
+
+.scrollbar-hide::-webkit-scrollbar-thumb {
+  opacity: 0;
+}

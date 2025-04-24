@@ -112,18 +112,20 @@ export const validateCoupon = async (req, res, next) => {
       isActive: true,
     });
     if (!coupon) {
-      return res.status;
+      return res.status(404).json({ message: "Coupon not found or inactive" });
     }
+
     if (coupon.expirationDate < new Date()) {
       coupon.isActive = false;
       await coupon.save();
       return res.status(404).json({ message: "Coupon expired" });
     }
 
-    return res.json({
+    return res.status(200).json({
       message: "Coupon is valid",
       code: coupon.code,
       discountPercentage: coupon.discountPercentage,
+      isVerified: true,
     });
   } catch (error) {
     console.log("Error in validateCoupon controller ", error.message);

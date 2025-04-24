@@ -2,12 +2,20 @@ import axios from "../lib/axios";
 import { create } from "zustand";
 import { toast } from "react-hot-toast";
 
+const initialCouponState = {
+  code: "",
+  isVerified: false,
+  discountPercentage: 0,
+};
+
 export const useCartStore = create((set, get) => ({
   cartItems: [],
   totalItems: 0,
   totalPrice: 0,
   buttonLoading: false,
   screenLoading: false,
+  coupons: [],
+  couponApplied: initialCouponState,
 
   calculateCartTotals: () => {
     const { cartItems } = get();
@@ -109,5 +117,66 @@ export const useCartStore = create((set, get) => ({
       set({ screenLoading: false });
       return false;
     }
+  },
+
+  getAllCoupons: async (userId) => {
+    try {
+      const res = await axios.get("/coupons");
+      set({ coupons: res.data });
+      console.log("coupons :", res.data);
+      return { success: true };
+    } catch (error) {
+      console.log("Error in fetching All Coupons:", error.message);
+      toast.error(
+        error?.response?.data?.message || "Coupons couldn't be fetched"
+      );
+      return false;
+    }
+  },
+
+  validateCoupon: async (code) => {
+    try {
+      console.log("Validating :", code);
+      const res = await axios.post("/coupons/validate", { code });
+      set((state) => ({
+        couponApplied: {
+          ...state.couponApplied,
+          code: res.data?.code,
+          isVerified: res.data?.isVerified,
+          discountPercentage: res.data?.discountPercentage,
+        },
+      }));
+      console.log("coupon :", res.data);
+      toast.success(
+        `'${get().couponApplied.code || "Coupon"}'  applied successfully`,
+        {
+          id: res.data?.code,
+        }
+      );
+      return { success: true };
+    } catch (error) {
+      if (error?.response?.status === 404) {
+        set((state) => ({
+          couponApplied: {
+            ...state.couponApplied,
+            code: "",
+            isVerified: false,
+            discountPercentage: 0,
+          },
+        }));
+        toast.error("Invalid Coupon");
+      } else {
+        toast.error(
+          error?.response?.data?.message || "Coupon couldn't be validated"
+        );
+      }
+      console.log("Error in validating Coupon:", error.message);
+      return false;
+    }
+  },
+
+  removeCoupon: () => {
+    set({ couponApplied: initialCouponState });
+    toast.success("Coupon Removed");
   },
 }));
