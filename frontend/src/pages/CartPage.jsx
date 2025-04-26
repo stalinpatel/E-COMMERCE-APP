@@ -79,34 +79,43 @@ const CartPage = () => {
     }
 
     const handleCheckout = async () => {
-        const res = await createOrder()
-        if (res.success) {
-            const key = import.meta.env.VITE_RAZORPAY_KEY_ID;
-            const paymentOptions = {
-                "key": key,
-                "amount": res.order.amount,
-                "currency": res.order.currency,
-                "name": "Stalin E-Store ",
-                "order_id": res.order.id,
-                "handler": async (response) => {
-                    const res = await verifyPayment(response)
-                    if (res.success) {
-                        navigate("/payment-success")
-                    }
-                },
-                "prefill": {
-                    "name": 'Stalin',
-                    "email": 'stalin@example.com',
-                    "contact": '6371352739'
+        try {
+            const res = await createOrder();
+            if (res.success) {
+                const key = import.meta.env.VITE_RAZORPAY_KEY_ID;
+                const paymentOptions = {
+                    "key": key,
+                    "amount": res.order.amount,
+                    "currency": res.order.currency,
+                    "name": "Stalin E-Store ",
+                    "order_id": res.order.id,
+                    "handler": async (response) => {
+                        const res = await verifyPayment(response)
+                        if (res.success) {
+                            navigate("/payment-success")
+                        }
+                    },
+                    "prefill": {
+                        "name": 'Stalin',
+                        "email": 'stalin@example.com',
+                        "contact": '6371352739'
 
-                },
-                "theme": {
-                    "color": "#bb03bb"
+                    },
+                    "theme": {
+                        "color": "#bb03bb"
+                    }
                 }
+                const razorpayInstance = new Razorpay(paymentOptions);
+                razorpayInstance.open();
+            } else {
+                navigate("/payment-failed");
             }
-            const razorpayInstance = new Razorpay(paymentOptions);
-            razorpayInstance.open();
+        } catch (error) {
+            console.log("Error creating order:", error);
+            toast.error("Failed to start checkout. Please try again.");
+            navigate("/payment-failed");
         }
+
     }
 
     if (screenLoading) {

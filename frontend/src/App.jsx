@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import LoadingSpinner from "./components/LoadingSpinner";
 import CartPage from "./pages/CartPage";
 import PaymentSuccessPage from "./pages/PaymentSuccessPage";
+import PaymentFailedPage from "./components/PaymentFailedPage";
 
 
 function App() {
@@ -47,6 +48,7 @@ function App() {
               <Route path="/category/:category" element={<CategoryPage />} />
               <Route path="/cart" element={user ? <CartPage /> : <Navigate to="/login" />} />
               <Route path="/payment-success" element={user ? <PaymentSuccessPage /> : <Navigate to="/" />} />
+              <Route path="/payment-failed" element={user ? <PaymentFailedPage /> : <Navigate to="/" />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>

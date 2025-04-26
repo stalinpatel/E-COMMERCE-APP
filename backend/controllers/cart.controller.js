@@ -168,4 +168,4 @@ export const emptyCart = async (req, res, next) => {
       .status(500)
       .json({ message: "Internal Server Error: " + error.message });
   }
-};
+};  

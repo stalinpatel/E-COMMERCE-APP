@@ -235,7 +235,7 @@ export const useCartStore = create((set, get) => ({
   },
 
   emptyCart: async () => {
-    set({ cartItems: [] });
+    set({ cartItems: [], couponApplied: initialCouponState });
     get().calculateCartTotals();
     try {
       await axios.patch("/cart/empty-cart");

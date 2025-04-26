@@ -22,6 +22,9 @@ export const createOrder = async (req, res) => {
     };
     const order = await razorpayInstance.orders.create(options);
     return res.status(200).json({ order, success: true });
+    // return res
+    //   .status(500)
+    //   .json({ success: false, message: "Simulated order creation failure" });
   } catch (error) {
     console.log("Error in createOrder controller ", error);
     return res.status(500).json({ message: "Internal Server Error" + error });
