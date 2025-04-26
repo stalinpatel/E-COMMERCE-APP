@@ -102,6 +102,7 @@ export const getCartProducts = async (req, res, next) => {
   }
 };
 
+// DONE
 export const evaluateCartTotals = async (req, res, next) => {
   try {
     const user = await req.user.populate("cartItems.productId");

@@ -1,15 +1,15 @@
 import mongoose from "mongoose";
-import Product from "./product.model";
 
 const orderSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Types.ObjectId,
       ref: "User",
+      required: true,
     },
-    Products: [
+    items: [
       {
-        product: {
+        productId: {
           type: mongoose.Types.ObjectId,
           ref: "Product",
         },
@@ -30,16 +30,38 @@ const orderSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
-    stripSessionId: {
+    razorpayOrderId: {
       type: String,
-      unique: true,
+    },
+    razorpayPaymentId: {
+      type: String,
+    },
+    razorpaySignature: {
+      type: String,
+    },
+    paymentStatus: {
+      type: String,
+      enum: ["created", "failed", "successful", "pending", "refunded"],
+      default: "created",
+    },
+    coupon: {
+      code: {
+        type: String,
+      },
+      discountPercentage: {
+        type: Number,
+        min: 0,
+        max: 100,
+      },
+    },
+    receiptId: {
+      type: String,
     },
   },
   {
     timestamps: true,
   }
 );
-
 
 const Order = mongoose.model("Order", orderSchema);
 export default Order;

@@ -1,7 +1,13 @@
-// import express from "express";
+import express from "express";
+import { protectRoute } from "../middlewares/auth.middleware.js";
+import {
+  createOrder,
+  verifyPayment,
+} from "../controllers/payment.controller.js";
 
-// const router = express.Router();
+const router = express.Router();
 
-// router.post("/create-checkout-session");
+router.post("/create-order", protectRoute, createOrder); //DONE
+router.post("/verify-payment", protectRoute, verifyPayment);
 
-// export default router;
+export default router;

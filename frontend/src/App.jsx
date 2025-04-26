@@ -11,6 +11,7 @@ import { useUserStore } from "./store/useUserStore";
 import { useEffect } from "react";
 import LoadingSpinner from "./components/LoadingSpinner";
 import CartPage from "./pages/CartPage";
+import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 
 
 function App() {
@@ -24,8 +25,6 @@ function App() {
   if (checkingAuth) {
     return <LoadingSpinner />
   }
-  console.log('User detils :', user);
-
 
   return (
     <>
@@ -45,6 +44,7 @@ function App() {
               <Route path="/secret-dashboard" element={user?.role == "admin" && user ? <AdminPage /> : <Navigate to="/login" />} />
               <Route path="/category/:category" element={<CategoryPage />} />
               <Route path="/cart" element={user ? <CartPage /> : <Navigate to="/login" />} />
+              <Route path="/payment-success" element={user ? <PaymentSuccessPage /> : <Navigate to="/" />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>

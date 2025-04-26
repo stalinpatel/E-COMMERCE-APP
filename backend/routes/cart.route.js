@@ -14,5 +14,5 @@ router.get("/", protectRoute, getCartProducts); // DONE
 router.post("/", protectRoute, addToCart); // DONE
 router.delete("/", protectRoute, removeAllFromCart); // DONE
 router.put("/:id", protectRoute, updateQuantity); // DONE
-router.post("/evaluate-totals", protectRoute, evaluateCartTotals);
+router.post("/evaluate-totals", protectRoute, evaluateCartTotals); // DONE
 export default router;

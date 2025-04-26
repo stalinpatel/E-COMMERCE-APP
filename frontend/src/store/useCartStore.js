@@ -16,8 +16,22 @@ export const useCartStore = create((set, get) => ({
   discountedPrice: 0,
   buttonLoading: false,
   screenLoading: false,
+  checkoutButtonLoading: false,
   coupons: [],
   couponApplied: initialCouponState,
+  orderDetails: {
+    orderId: "",
+    receiptId: "",
+    amountInPaise: "",
+    status: "created",
+  },
+  paymentDetails: {
+    orderId: "",
+    receiptId: "",
+    amount: 0,
+    status: "Initiated",
+    paidAt: "",
+  },
 
   calculateCartTotals: () => {
     const { cartItems, couponApplied } = get();
@@ -37,6 +51,7 @@ export const useCartStore = create((set, get) => ({
       });
     }
     set({ totalItems, totalPrice });
+    console.log(cartItems, couponApplied, totalPrice);
   },
 
   addToCart: async (productId) => {
@@ -130,7 +145,6 @@ export const useCartStore = create((set, get) => ({
     try {
       const res = await axios.get("/coupons");
       set({ coupons: res.data });
-      console.log("coupons :", res.data);
       return { success: true };
     } catch (error) {
       console.log("Error in fetching All Coupons:", error.message);
@@ -193,12 +207,10 @@ export const useCartStore = create((set, get) => ({
       const res = await axios.post("/cart/evaluate-totals", {
         code: couponApplied.code,
       });
-      console.log("Total price fetched :", res.data?.total);
-      toast.success(`Total price fetched :${res.data?.total}`);
       set({
         totalPrice: res.data?.originalTotal,
         discount: res.data?.discount,
-        discountedPrice: res.data?.total,
+        discountedPrice: res.data?.originalTotal - res.data?.discount,
       });
       return { success: true };
     } catch (error) {
@@ -206,6 +218,64 @@ export const useCartStore = create((set, get) => ({
         error?.response?.data?.message || "Total couldn't be calculated"
       );
       console.log("Error in evaluateCartTotals :", error.message);
+      return false;
+    }
+  },
+
+  createOrder: async () => {
+    try {
+      set({ checkoutButtonLoading: true });
+      const { discountedPrice, evaluateCartTotals, totalPrice } = get();
+      await evaluateCartTotals();
+      const res = await axios.post("/payments/create-order", {
+        amount: discountedPrice || totalPrice,
+      });
+      if (res) {
+        set({
+          orderDetails: {
+            orderId: res.data?.order?.id,
+            receiptId: res.data?.order?.receipt,
+            status: res.data?.order?.status,
+            amountInPaise: res.data?.order?.amount,
+          },
+        });
+        return {
+          success: true,
+          order: res.data?.order,
+        };
+      }
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message || "Order couldn't be created"
+      );
+      console.log("Error in createOrder :", error.message);
+      return false;
+    } finally {
+      set({ checkoutButtonLoading: false });
+    }
+  },
+
+  verifyPayment: async (response) => {
+    set({ checkoutButtonLoading: true });
+    try {
+      const { orderDetails, couponApplied } = get();
+      const res = await axios.post("/payments/verify-payment", {
+        orderDetails,
+        couponApplied,
+        response,
+      });
+      console.log("Order placed :", res.data?.order);
+      toast.success(res.data?.message || "Payment successful");
+      set({
+        checkoutButtonLoading: false,
+        paymentDetails: res.data?.order,
+      });
+      return { success: true };
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message || "Payment couldn't be verified"
+      );
+      console.log("Error in verifyPayment :", error);
       return false;
     }
   },

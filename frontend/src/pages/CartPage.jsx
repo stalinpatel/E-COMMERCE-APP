@@ -1,32 +1,62 @@
 import React, { useEffect, useState } from 'react';
 import { useCartStore } from '../store/useCartStore';
+import { useUserStore } from "../store/useUserStore"
 import { motion } from "framer-motion"
 import { Trash2, CrossIcon } from 'lucide-react';
 import CartPageSkeleton from "../components/skeletons/CartPageSkeleton"
 import PinkButtonSpinner from "../components/PinkButtonSpinner"
 import NoCartItemsFound from '../components/NoCartItemsFound';
 import toast from 'react-hot-toast';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import ButtonLoader from "../components/ButtonLoader"
+
+const loadScript = (url) => {
+    return new Promise((resolve) => {
+        if (document.querySelector(`script[src="${url}"]`)) {
+            resolve(true);
+            return;
+        }
+        const script = document.createElement("script");
+        script.src = url;
+        script.onload = () => resolve(true);
+        script.onerror = () => resolve(false);
+        document.body.appendChild(script);
+    });
+};
 
 const CartPage = () => {
-    const { cartItems, getCartProducts, removeAllFromCart, totalPrice, discountedPrice, discount, screenLoading, updateQuantity, getAllCoupons, coupons, validateCoupon, couponApplied, removeCoupon, evaluateCartTotals } = useCartStore();
+    const { cartItems, getCartProducts, removeAllFromCart, totalPrice, discountedPrice, discount, screenLoading, checkoutButtonLoading, updateQuantity, getAllCoupons, coupons, validateCoupon, couponApplied, removeCoupon, createOrder, verifyPayment } = useCartStore();
+    const { user } = useUserStore();
+    const navigate = useNavigate();
     const [deletingItemId, setDeletingItemId] = useState(null);
     const [inputCode, setInputCode] = useState("")
 
     useEffect(() => {
         getCartProducts();
         getAllCoupons();
-        console.log("coupons :", coupons);
     }, []);
+
+    useEffect(() => {
+        (async () => {
+            const scriptLoaded = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
+            if (!scriptLoaded) {
+                alert("Failed to load Razorpay SDK. Please check your internet connection.");
+                return;
+            }
+        })()
+    }, [])
+
 
     const handleDelete = async (productId) => {
         setDeletingItemId(productId);
         await removeAllFromCart(productId);
         setDeletingItemId(null);
     };
+
     const handleQuantityChange = async (productId, quantity) => {
         updateQuantity(productId, quantity)
     }
+
     const increaseByOne = (item) => {
         let quantity = Number(item.quantity) + 1;
         if (quantity > 20) {
@@ -35,6 +65,7 @@ const CartPage = () => {
         }
         handleQuantityChange(item.productId, quantity)
     }
+
     const decreaseByOne = (item) => {
         const quantity = Math.max(0, Number(item.quantity) - 1)
         handleQuantityChange(item.productId, quantity)
@@ -49,8 +80,35 @@ const CartPage = () => {
         removeCoupon()
     }
 
-    const handleCheckout = () => {
-        evaluateCartTotals();
+    const handleCheckout = async () => {
+        const res = await createOrder()
+        if (res.success) {
+            const key = import.meta.env.VITE_RAZORPAY_KEY_ID;
+            const paymentOptions = {
+                "key": key,
+                "amount": res.order.amount,
+                "currency": res.order.currency,
+                "name": "Stalin E-Store ",
+                "order_id": res.order.id,
+                "handler": async (response) => {
+                    const res = await verifyPayment(response)
+                    if (res.success) {
+                        navigate("/payment-success")
+                    }
+                },
+                "prefill": {
+                    "name": 'Stalin',
+                    "email": 'stalin@example.com',
+                    "contact": '6371352739'
+
+                },
+                "theme": {
+                    "color": "#bb03bb"
+                }
+            }
+            const razorpayInstance = new Razorpay(paymentOptions);
+            razorpayInstance.open();
+        }
     }
 
     if (screenLoading) {
@@ -211,10 +269,10 @@ const CartPage = () => {
                         </div>
                         <div className="flex justify-between text-white font-bold text-lg">
                             <span>Total:</span>
-                            <span>₹ {(discountedPrice ? discountedPrice : totalPrice).toFixed(2)}</span>
+                            <span>₹ {(couponApplied.isVerified ? discountedPrice : totalPrice).toFixed(2)}</span>
                         </div>
-                        <button onClick={handleCheckout} className="w-full mt-4 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-2xl transition-all">
-                            Proceed to Checkout
+                        <button onClick={handleCheckout} className="w-full mt-4 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-2xl transition-all flex items-center justify-center">
+                            {checkoutButtonLoading ? <ButtonLoader /> : "Proceed to Checkout"}
                         </button>
                         <Link to={"/"}>
                             <p className="text-center text-sm text-pink-400 mt-2 cursor-pointer hover:underline">
