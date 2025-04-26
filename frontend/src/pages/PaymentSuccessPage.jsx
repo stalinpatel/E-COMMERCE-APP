@@ -37,7 +37,7 @@ const PaymentSuccessPage = () => {
                     <div className="flex justify-between">
                         <span className="font-semibold text-gray-400">Amount Paid:</span>
                         <span>
-                            ₹{amount.toFixed(2)}
+                            ₹{amount}
                         </span>
                     </div>
                     <div className="flex justify-between">

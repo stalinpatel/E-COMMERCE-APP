@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useCartStore } from '../store/useCartStore';
-import { useUserStore } from "../store/useUserStore"
 import { motion } from "framer-motion"
 import { Trash2, CrossIcon } from 'lucide-react';
 import CartPageSkeleton from "../components/skeletons/CartPageSkeleton"
@@ -26,7 +25,6 @@ const loadScript = (url) => {
 
 const CartPage = () => {
     const { cartItems, getCartProducts, removeAllFromCart, totalPrice, discountedPrice, discount, screenLoading, checkoutButtonLoading, updateQuantity, getAllCoupons, coupons, validateCoupon, couponApplied, removeCoupon, createOrder, verifyPayment } = useCartStore();
-    const { user } = useUserStore();
     const navigate = useNavigate();
     const [deletingItemId, setDeletingItemId] = useState(null);
     const [inputCode, setInputCode] = useState("")
@@ -279,6 +277,7 @@ const CartPage = () => {
                                 Continue Shopping →
                             </p>
                         </Link>
+
                     </motion.div>
                 </div>
             </div>

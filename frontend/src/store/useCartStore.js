@@ -51,7 +51,6 @@ export const useCartStore = create((set, get) => ({
       });
     }
     set({ totalItems, totalPrice });
-    console.log(cartItems, couponApplied, totalPrice);
   },
 
   addToCart: async (productId) => {
@@ -62,13 +61,16 @@ export const useCartStore = create((set, get) => ({
         buttonLoading: false,
         cartItems: res.data,
       });
-      toast.success("Product added to cart");
+      toast.success("Product added to cart", {
+        id: `add-to-cart-${productId}`,
+      });
       get().calculateCartTotals(); // ✅ Call it here
       return { success: true };
     } catch (error) {
       console.log("Error in adding to cart :", error.message);
       toast.error(
-        error?.response?.data?.message || "Product couldn't be added to cart"
+        error?.response?.data?.message || "Product couldn't be added to cart",
+        { id: `add-to-cart-${productId}` }
       );
       set({ screenLoading: false });
       return false;
@@ -85,7 +87,8 @@ export const useCartStore = create((set, get) => ({
     } catch (error) {
       console.log("Error in fetching cart Products:", error.message);
       toast.error(
-        error?.response?.data?.message || "Cart products couldn't be fetched"
+        error?.response?.data?.message || "Cart products couldn't be fetched",
+        { id: "get-cart-products" }
       );
       set({ screenLoading: false });
       return false;
@@ -101,11 +104,15 @@ export const useCartStore = create((set, get) => ({
       );
       set({ cartItems: updatedItems });
       get().calculateCartTotals();
+      toast.success("Product removed from cart", {
+        id: `remove-from-cart-${productId}`,
+      });
       return { success: true };
     } catch (error) {
       console.log("Error in deleting  cart Products:", error.message);
       toast.error(
-        error?.response?.data?.message || "Cart products couldn't be deleted"
+        error?.response?.data?.message || "Cart products couldn't be deleted",
+        { id: `remove-from-cart-${productId}` }
       );
       set({ screenLoading: false });
       return false;
@@ -127,14 +134,18 @@ export const useCartStore = create((set, get) => ({
     try {
       const res = await axios.put(`/cart/${productId}`, { quantity });
       get().calculateCartTotals();
+      toast.success(`Quantity updated for ${productId}`, {
+        id: `update-quantity-${productId}`,
+      });
       return { success: true };
     } catch (error) {
       // ❌ Backend failed - revert to previous state
       set({ cartItems: prevCart });
-      console.log("Error in deleting  cart Products:", error.message);
+      console.log("Error in updating cart Products:", error.message);
       toast.error(
         error?.response?.data?.message ||
-          "Failed to update quantity. Please try again"
+          "Failed to update quantity. Please try again",
+        { id: `update-quantity-${productId}` }
       );
       set({ screenLoading: false });
       return false;
@@ -149,7 +160,8 @@ export const useCartStore = create((set, get) => ({
     } catch (error) {
       console.log("Error in fetching All Coupons:", error.message);
       toast.error(
-        error?.response?.data?.message || "Coupons couldn't be fetched"
+        error?.response?.data?.message || "Coupons couldn't be fetched",
+        { id: "get-all-coupons" }
       );
       return false;
     }
@@ -167,10 +179,8 @@ export const useCartStore = create((set, get) => ({
         },
       }));
       toast.success(
-        `'${get().couponApplied.code || "Coupon"}'  applied successfully`,
-        {
-          id: res.data?.code,
-        }
+        `'${get().couponApplied.code || "Coupon"}' applied successfully`,
+        { id: `validate-coupon-${code}` }
       );
       get().calculateCartTotals();
       return { success: true };
@@ -184,10 +194,11 @@ export const useCartStore = create((set, get) => ({
             discountPercentage: 0,
           },
         }));
-        toast.error("Invalid Coupon");
+        toast.error("Invalid Coupon", { id: `validate-coupon-${code}` });
       } else {
         toast.error(
-          error?.response?.data?.message || "Coupon couldn't be validated"
+          error?.response?.data?.message || "Coupon couldn't be validated",
+          { id: `validate-coupon-${code}` }
         );
       }
       console.log("Error in validating Coupon:", error.message);
@@ -198,7 +209,7 @@ export const useCartStore = create((set, get) => ({
   removeCoupon: () => {
     set({ couponApplied: initialCouponState });
     get().calculateCartTotals();
-    toast.success("Coupon Removed");
+    toast.success("Coupon Removed", { id: "remove-coupon" });
   },
 
   evaluateCartTotals: async () => {
@@ -215,9 +226,26 @@ export const useCartStore = create((set, get) => ({
       return { success: true };
     } catch (error) {
       toast.error(
-        error?.response?.data?.message || "Total couldn't be calculated"
+        error?.response?.data?.message || "Total couldn't be calculated",
+        { id: "evaluate-cart-totals" }
       );
       console.log("Error in evaluateCartTotals :", error.message);
+      return false;
+    }
+  },
+
+  emptyCart: async () => {
+    set({ cartItems: [] });
+    get().calculateCartTotals();
+    try {
+      await axios.patch("/cart/empty-cart");
+      return { success: true };
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message || "Cart couldn't be emptied",
+        { id: "empty-cart" }
+      );
+      console.log("Error in emptyCart :", error.message);
       return false;
     }
   },
@@ -246,7 +274,8 @@ export const useCartStore = create((set, get) => ({
       }
     } catch (error) {
       toast.error(
-        error?.response?.data?.message || "Order couldn't be created"
+        error?.response?.data?.message || "Order couldn't be created",
+        { id: "create-order" }
       );
       console.log("Error in createOrder :", error.message);
       return false;
@@ -258,22 +287,26 @@ export const useCartStore = create((set, get) => ({
   verifyPayment: async (response) => {
     set({ checkoutButtonLoading: true });
     try {
-      const { orderDetails, couponApplied } = get();
+      const { orderDetails, couponApplied, emptyCart } = get();
       const res = await axios.post("/payments/verify-payment", {
         orderDetails,
         couponApplied,
         response,
       });
       console.log("Order placed :", res.data?.order);
-      toast.success(res.data?.message || "Payment successful");
+      toast.success(res.data?.message || "Payment successful", {
+        id: "verify-payment",
+      });
       set({
         checkoutButtonLoading: false,
         paymentDetails: res.data?.order,
       });
+      emptyCart();
       return { success: true };
     } catch (error) {
       toast.error(
-        error?.response?.data?.message || "Payment couldn't be verified"
+        error?.response?.data?.message || "Payment couldn't be verified",
+        { id: "verify-payment" }
       );
       console.log("Error in verifyPayment :", error);
       return false;

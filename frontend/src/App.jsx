@@ -20,6 +20,8 @@ function App() {
 
   useEffect(() => {
     checkAuth();
+    console.log('User details :', user);
+
   }, [checkAuth])
 
   if (checkingAuth) {

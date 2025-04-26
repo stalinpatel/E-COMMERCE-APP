@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { ShoppingCart, LogOut, LogIn, Lock, UserPlus, Factory } from 'lucide-react';
 import { useUserStore } from '../store/useUserStore';
 import { useCartStore } from '../store/useCartStore';
+
+
 const AdminNav = ({ handleLogout, cartItemCount }) => {
   return (
     <nav className="flex justify-between items-center p-4 bg-slate-900 shadow-lg fixed top-0 left-0 w-full z-50">
@@ -127,6 +129,7 @@ const Navbar = () => {
   const { totalItems } = useCartStore();
   const { user, logout } = useUserStore();
   const isAdmin = user?.role === "admin";
+  
   const handleLogout = () => {
     console.log('Handle logout clicked ');
     logout();

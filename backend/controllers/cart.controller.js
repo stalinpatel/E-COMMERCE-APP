@@ -1,4 +1,5 @@
 import Coupon from "../models/coupon.model.js";
+import User from "../models/user.model.js";
 
 // DONE
 export const addToCart = async (req, res, next) => {
@@ -135,6 +136,34 @@ export const evaluateCartTotals = async (req, res, next) => {
     });
   } catch (error) {
     console.log("Error in evaluateCartTotals controller:", error.message);
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error: " + error.message });
+  }
+};
+
+// DONE
+export const emptyCart = async (req, res, next) => {
+  try {
+    const user = req.user;
+
+    const updatedCart = await User.findOneAndUpdate(
+      { _id: user._id },
+      { $set: { cartItems: [] } },
+      { new: true }
+    );
+
+    if (!updatedCart) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Cart Emptied", user: updatedCart });
+  } catch (error) {
+    console.log("Error in emptyCart controller:", error.message);
     return res
       .status(500)
       .json({ message: "Internal Server Error: " + error.message });
