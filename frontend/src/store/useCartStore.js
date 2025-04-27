@@ -85,11 +85,7 @@ export const useCartStore = create((set, get) => ({
       get().calculateCartTotals(); // ✅ Call it here
       return { success: true };
     } catch (error) {
-      console.log("Error in fetching cart Products:", error.message);
-      toast.error(
-        error?.response?.data?.message || "Cart products couldn't be fetched",
-        { id: "get-cart-products" }
-      );
+      console.log("Error in fetching cart Products:", error);
       set({ screenLoading: false });
       return false;
     }
@@ -134,9 +130,7 @@ export const useCartStore = create((set, get) => ({
     try {
       const res = await axios.put(`/cart/${productId}`, { quantity });
       get().calculateCartTotals();
-      toast.success(`Quantity updated for ${productId}`, {
-        id: `update-quantity-${productId}`,
-      });
+
       return { success: true };
     } catch (error) {
       // ❌ Backend failed - revert to previous state

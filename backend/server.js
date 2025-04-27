@@ -7,7 +7,8 @@ import productRoutes from "./routes/product.route.js";
 import cartRoutes from "./routes/cart.route.js";
 import couponRoutes from "./routes/coupon.route.js";
 import paymentRoutes from "./routes/payment.route.js";
-
+import analyticsRoutes from "./routes/analytics.route.js";
+import orderRoutes from "./routes/orderRoutes.js";
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -18,8 +19,9 @@ app.use("/api/auth", authRoutes); // DONE
 app.use("/api/products", productRoutes); // DONE 1left - productRecommendation
 app.use("/api/cart", cartRoutes); // DONE
 app.use("/api/coupons", couponRoutes); // DONE
-app.use("/api/payments", paymentRoutes);
-
+app.use("/api/payments", paymentRoutes); // DONE
+app.use("/api/analytics", analyticsRoutes); // DONE
+app.use("/api/orders", orderRoutes);
 app.listen(5000, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
   connectDB();

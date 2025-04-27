@@ -59,42 +59,10 @@ const HomePage = () => {
     }
   ];
 
-  const categoryProducts2 = [
-    {
-      id: 1,
-      name: 'Wireless Headphones',
-      price: '99.99',
-      image: 'https://via.placeholder.com/300x200?text=Headphones',
-    },
-    {
-      id: 2,
-      name: 'Sneakers',
-      price: '129.99',
-      image: 'https://via.placeholder.com/300x200?text=Sneakers',
-    },
-    {
-      id: 3,
-      name: 'LED Lamp',
-      price: '39.99',
-      image: 'https://via.placeholder.com/300x200?text=LED+Lamp',
-    },
-    {
-      id: 4,
-      name: 'Gaming Mouse',
-      price: '49.99',
-      image: 'https://via.placeholder.com/300x200?text=Gaming+Mouse',
-    },
-    {
-      id: 5,
-      name: 'Gaming Mouse',
-      price: '449.99',
-      image: 'https://via.placeholder.com/300x200?text=Gaming+Mouse',
-    },
-  ];
 
-  const { getFeaturedProducts, featuredProducts, screenLoading } = useProductStore()
-  const { totalItems, calculateCartTotals, getCartProducts } = useCartStore()
-  const { user } = useUserStore();
+  const { getFeaturedProducts, featuredProducts, screenLoading, } = useProductStore()
+  const { getCartProducts } = useCartStore()
+  const { user, } = useUserStore();
 
   useEffect(() => {
     getFeaturedProducts();
@@ -107,6 +75,7 @@ const HomePage = () => {
     <div className="w-full min-h-screen bg-slate-950 text-white px-20 ">
       {/* Categories */}
       <section className="py-10 px-6">
+
         <h2 className="text-4xl font-bold text-center mb-12">Shop by Categories</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
           {categories.map((category) => (

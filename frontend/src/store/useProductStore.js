@@ -116,8 +116,8 @@ export const useProductStore = create((set, get) => ({
       set({ featuredProducts: res.data || [], screenLoading: false }); // new key
       return { success: true };
     } catch (error) {
-      console.log("Error fetching products :", error.message);
-      toast.error(
+      console.log("Error fetching products :", error);
+      console.error(
         error?.response?.data?.message || "Product couldn't be fetched"
       );
       set({ screenLoading: false });

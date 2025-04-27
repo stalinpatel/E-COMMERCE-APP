@@ -8,6 +8,6 @@ import {
 const router = express.Router();
 
 router.post("/create-order", protectRoute, createOrder); //DONE
-router.post("/verify-payment", protectRoute, verifyPayment);
+router.post("/verify-payment", protectRoute, verifyPayment);//DONE
 
 export default router;

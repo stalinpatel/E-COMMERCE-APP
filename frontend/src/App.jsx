@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
@@ -11,6 +11,7 @@ import { useUserStore } from "./store/useUserStore";
 import { useEffect } from "react";
 import LoadingSpinner from "./components/LoadingSpinner";
 import CartPage from "./pages/CartPage";
+import OrdersPage from "./pages/OrdersPage";
 import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 import PaymentFailedPage from "./pages/PaymentFailedPage";
 
@@ -22,7 +23,6 @@ function App() {
   useEffect(() => {
     checkAuth();
     console.log('User details :', user);
-
   }, [checkAuth])
 
   if (checkingAuth) {
@@ -46,7 +46,8 @@ function App() {
               <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/" />} />
               <Route path="/secret-dashboard" element={user?.role == "admin" && user ? <AdminPage /> : <Navigate to="/login" />} />
               <Route path="/category/:category" element={<CategoryPage />} />
-              <Route path="/cart" element={user ? <CartPage /> : <Navigate to="/login" />} />
+              <Route path="/cart" element={user ? <CartPage /> : <Navigate to="/" />} />
+              <Route path="/orders" element={user ? <OrdersPage /> : <Navigate to="/" />} />
               <Route path="/payment-success" element={user ? <PaymentSuccessPage /> : <Navigate to="/" />} />
               <Route path="/payment-failed" element={user ? <PaymentFailedPage /> : <Navigate to="/" />} />
               <Route path="*" element={<NotFound />} />

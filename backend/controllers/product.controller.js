@@ -181,7 +181,12 @@ export const toggleFeaturedProduct = async (req, res, next) => {
 async function updateFeaturedProductCache() {
   try {
     const featuredProducts = await Product.find({ isFeatured: true }).lean();
-    await redish.set("featured_products", JSON.stringify(featuredProducts));
+    await redish.set(
+      "featured_products",
+      JSON.stringify(featuredProducts),
+      "EX",
+      7 * 24 * 60 * 60
+    );
   } catch (error) {
     console.log(
       "Error in updateFeaturedProductCache controller ",

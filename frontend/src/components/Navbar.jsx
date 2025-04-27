@@ -5,7 +5,7 @@ import { useUserStore } from '../store/useUserStore';
 import { useCartStore } from '../store/useCartStore';
 
 
-const AdminNav = ({ handleLogout, cartItemCount }) => {
+const AdminNav = ({ handleLogout, cartItemCount, orders }) => {
   return (
     <nav className="flex justify-between items-center p-4 bg-slate-900 shadow-lg fixed top-0 left-0 w-full z-50">
       {/* Logo */}
@@ -29,6 +29,15 @@ const AdminNav = ({ handleLogout, cartItemCount }) => {
           </div>
           Cart
         </Link>
+        {
+          orders &&
+          <Link
+            to="/orders"
+            className="text-white hover:text-pink-400"
+          >
+            Orders
+          </Link>
+        }
         <Link
           to="/secret-dashboard"
           className="text-white hover:text-pink-400"
@@ -38,6 +47,7 @@ const AdminNav = ({ handleLogout, cartItemCount }) => {
             Dashboard
           </div>
         </Link>
+
         <Link
           to="/"
           className="text-white hover:text-pink-400"
@@ -53,7 +63,7 @@ const AdminNav = ({ handleLogout, cartItemCount }) => {
   );
 }
 
-const UserNav = ({ handleLogout, cartItemCount }) => {
+const UserNav = ({ handleLogout, cartItemCount, orders }) => {
 
 
   return (
@@ -79,7 +89,15 @@ const UserNav = ({ handleLogout, cartItemCount }) => {
           </div>
           Cart
         </Link>
-
+        {
+          orders &&
+          <Link
+            to="/orders"
+            className="text-white hover:text-pink-400"
+          >
+            Orders
+          </Link>
+        }
         <Link
           to="/"
           className="text-white hover:text-pink-400"
@@ -127,19 +145,18 @@ const GuestNav = () => {
 
 const Navbar = () => {
   const { totalItems } = useCartStore();
-  const { user, logout } = useUserStore();
+  const { user, logout, orders } = useUserStore();
   const isAdmin = user?.role === "admin";
 
   const handleLogout = () => {
-    console.log('Handle logout clicked ');
     logout();
   }
 
 
   return isAdmin
-    ? <AdminNav handleLogout={handleLogout} cartItemCount={totalItems} />
+    ? <AdminNav handleLogout={handleLogout} cartItemCount={totalItems} orders={orders} />
     : user
-      ? <UserNav handleLogout={handleLogout} cartItemCount={totalItems} />
+      ? <UserNav handleLogout={handleLogout} cartItemCount={totalItems} orders={orders} />
       : <GuestNav />;
   // if (isAdmin) return AdminNav;
   // else if (user) return UserNav;

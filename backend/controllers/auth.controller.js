@@ -13,7 +13,12 @@ const generateTokens = (userId) => {
 };
 
 const storeRefreshToken = async (userId, refreshToken) => {
-  await redish.set(`refresh_token:${userId}`, refreshToken);
+  await redish.set(
+    `refresh_token:${userId}`,
+    refreshToken,
+    "EX",
+    7 * 24 * 60 * 60
+  );
 };
 
 const setCookies = (res, accessToken, refreshToken) => {
@@ -21,7 +26,7 @@ const setCookies = (res, accessToken, refreshToken) => {
     httpOnly: true, //PREVENT XSS ATACKS
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict", //prevent CSRF attack,cross site request forgery attack
-    maxAge: 7 * 24 * 60 * 60 * 1000, //15 mins 15 * 60 * 1000
+    maxAge: 15 * 60 * 1000, //15 mins 15 * 60 * 1000
   });
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true, //PREVENT XSS ATACKS
@@ -125,6 +130,19 @@ export const logout = async (req, res, next) => {
 };
 
 export const refreshToken = async (req, res, next) => {
+  // console.log(
+  //   "refresh token hit at:",
+  //   new Date().toLocaleString("en-US", {
+  //     weekday: "long", // Sunday, Monday, etc
+  //     year: "numeric",
+  //     month: "long", // April
+  //     day: "numeric",
+  //     hour: "2-digit",
+  //     minute: "2-digit",
+  //     second: "2-digit",
+  //   })
+  // );
+
   try {
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) {
@@ -134,7 +152,7 @@ export const refreshToken = async (req, res, next) => {
     const storedToken = await redish.get(`refresh_token:${decoded.userId}`);
 
     if (storedToken !== refreshToken) {
-      return res.status(403).json({ message: "Invalid refresh token" });
+      return res.status(401).json({ message: "Invalid refresh token" });
     }
 
     const accessToken = jwt.sign(
@@ -150,7 +168,10 @@ export const refreshToken = async (req, res, next) => {
       maxAge: 15 * 60 * 1000,
     });
 
-    return res.json({ message: "Token refreshed Successfully" });
+    return res.json({
+      success: true,
+      message: "Token refreshed Successfully",
+    });
   } catch (error) {
     console.log("Error in refreshToken controller", error.message);
     return res.status(500).json({ message: "Server Error ," + error.message });
@@ -195,5 +216,3 @@ export const getProfile = async (req, res, next) => {
     return res.status(500).json({ message: "Server error," + error.message });
   }
 };
-
-// TODO : Implement the axiox interceptors for refreshing the access token
