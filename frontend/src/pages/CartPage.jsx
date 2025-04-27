@@ -87,7 +87,7 @@ const CartPage = () => {
                     "key": key,
                     "amount": res.order.amount,
                     "currency": res.order.currency,
-                    "name": "Stalin E-Store ",
+                    "name": "STYLIK",
                     "order_id": res.order.id,
                     "handler": async (response) => {
                         const res = await verifyPayment(response)

@@ -10,7 +10,7 @@ const AdminNav = ({ handleLogout, cartItemCount }) => {
     <nav className="flex justify-between items-center p-4 bg-slate-900 shadow-lg fixed top-0 left-0 w-full z-50">
       {/* Logo */}
       <div className="text-xl font-bold text-pink-500">
-        <Link to="/">E-Commerce</Link>
+        <Link to="/">STYLIK</Link>
       </div>
 
       {/* Navigation Links */}
@@ -60,7 +60,7 @@ const UserNav = ({ handleLogout, cartItemCount }) => {
     <nav className="flex justify-between items-center p-4 bg-slate-900 shadow-lg fixed top-0 left-0 w-full z-50">
       {/* Logo */}
       <div className="text-xl font-bold text-pink-500">
-        <Link to="/">E-Commerce</Link>
+        <Link to="/">STYLIK</Link>
       </div>
 
       {/* Navigation Links */}
@@ -97,10 +97,10 @@ const UserNav = ({ handleLogout, cartItemCount }) => {
 
 const GuestNav = () => {
   return (
-    <nav className="flex justify-between items-center  p-4 bg-slate-900 shadow-lg fixed top-0 left-0 w-full z-50">
+    <nav className="flex justify-between items-center  p-4 pl-10  bg-slate-900 shadow-lg fixed top-0 left-0 w-full z-50">
       {/* Logo */}
       <div className="text-xl font-bold text-pink-500">
-        <Link to="/">E-Commerce</Link>
+        <Link to="/">STYLIK</Link>
       </div>
 
       {/* Navigation Links */}
@@ -129,7 +129,7 @@ const Navbar = () => {
   const { totalItems } = useCartStore();
   const { user, logout } = useUserStore();
   const isAdmin = user?.role === "admin";
-  
+
   const handleLogout = () => {
     console.log('Handle logout clicked ');
     logout();

@@ -4,7 +4,11 @@ import { useCartStore } from '../store/useCartStore';
 export default function PaymentFailedPage() {
     const navigate = useNavigate();
     const { orderDetails: { orderId }, discountedPrice } = useCartStore();
-
+    useEffect(() => {
+        if (!orderId) {
+            navigate("/")
+        }
+    }, [])
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-slate-900 text-white px-6 py-12">
             <XCircle className="text-red-500" size={80} />

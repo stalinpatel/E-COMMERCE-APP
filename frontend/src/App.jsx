@@ -12,7 +12,7 @@ import { useEffect } from "react";
 import LoadingSpinner from "./components/LoadingSpinner";
 import CartPage from "./pages/CartPage";
 import PaymentSuccessPage from "./pages/PaymentSuccessPage";
-import PaymentFailedPage from "./components/PaymentFailedPage";
+import PaymentFailedPage from "./pages/PaymentFailedPage";
 
 
 function App() {
