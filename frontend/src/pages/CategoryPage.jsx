@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { useProductStore } from '../store/useProductStore';
+import toast from 'react-hot-toast';
+import { useNavigate, useParams } from 'react-router-dom';
+import ButtonLoader from "../components/skeletonsAndLoders/ButtonLoader";
 import ProductCardSkeleton from '../components/skeletonsAndLoders/ProductCardSkeleton';
 import { useCartStore } from '../store/useCartStore';
-import { useUserStore } from "../store/useUserStore"
-import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
-import ButtonLoader from "../components/skeletonsAndLoders/ButtonLoader"
+import { useProductStore } from '../store/useProductStore';
+import { useUserStore } from "../store/useUserStore";
 
 const CategoryPage = () => {
 
@@ -79,7 +78,7 @@ const CategoryPage = () => {
                                             className="w-full h-72 object-cover"
                                         />
                                         <div className="p-4 space-y-2">
-                                            <h3 className="text-xl font-semibold whitespace-nowrap overflow-ellipsis">{product.name}</h3>
+                                            <h3 className="text-xl font-semibold whitespace-nowrap overflow-hidden text-ellipsis">{product.name}</h3>
                                             <p className="text-pink-400 font-bold">₹ {product.price}</p>
                                             <button
                                                 onClick={() => { handleAddToCart(product._id) }}
