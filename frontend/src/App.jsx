@@ -39,7 +39,7 @@ function App() {
         <div className="relative z-50 ">
           <ToasterComponent />
           <Navbar />
-          <div className="content min-h-screen w-full   mt-16">
+          <div className="content min-h-screen w-full mt-8  md:mt-14">
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/signup" element={!user ? <SignUpPage /> : <Navigate to="/" />} />

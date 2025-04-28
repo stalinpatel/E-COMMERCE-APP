@@ -67,8 +67,8 @@ const FeaturedProductsSlider = () => {
     };
 
     return (
-        <section className="py-14 px-6">
-            <h2 className="text-4xl font-bold text-center mb-12">🔥 Featured Products</h2>
+        <section className="py-2 md:py-14 px-6">
+            <h2 className=" text-md sm:text-xl md:text-3xl lg:text-4xl font-bold text-center whitespace-nowrap overflow-hidden text-ellipsis my-2">🔥 Featured Products</h2>
             <div className="relative">
                 {screenLoading ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
