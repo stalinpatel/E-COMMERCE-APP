@@ -4,6 +4,7 @@ import axios from "../lib/axios";
 import { Users, Package, ShoppingCart, IndianRupee } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
+
 const AnalyticsTab = () => {
   const [analyticsData, setAnalyticsData] = useState({
     users: 0,
@@ -36,7 +37,8 @@ const AnalyticsTab = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+
         <AnalyticsCard title="Total Users" value={analyticsData.users.toLocaleString()} icon={Users} color="from-cyan-500 to-cyan-700" />
         <AnalyticsCard title="Total Products" value={analyticsData.products.toLocaleString()} icon={Package} color="from-violet-500 to-indigo-700" />
         <AnalyticsCard title="Total Sales" value={analyticsData.totalSales.toLocaleString()} icon={ShoppingCart} color="from-emerald-500 to-emerald-700" />

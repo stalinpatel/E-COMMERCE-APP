@@ -76,13 +76,13 @@ export const useProductStore = create((set, get) => ({
 
   deleteProduct: async (id) => {
     try {
-      set({ screenLoading: true });
+      set({ loading: true });
       const res = await axios.delete(`/products/${id}`);
       const currentProduct = get().allProducts; // changed
       const updatedProducts = currentProduct.filter((p) => p._id !== id);
       set({ allProducts: updatedProducts }); // changed
       toast.success(res?.data?.message || "Product deleted");
-      set({ screenLoading: false });
+      set({ loading: false });
       return { success: true };
     } catch (error) {
       console.log("Error deleting product :", error.message);
