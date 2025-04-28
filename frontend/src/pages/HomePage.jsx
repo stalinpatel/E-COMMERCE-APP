@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useProductStore } from '../store/useProductStore';
 import { useCartStore } from "../store/useCartStore"
-import ProductCardSkeleton from '../components/ProductCardSkeleton';
+import ProductCardSkeleton from '../components/skeletonsAndLoders/ProductCardSkeleton';
 import { useUserStore } from "../store/useUserStore"
 
 
@@ -61,15 +61,35 @@ const HomePage = () => {
 
 
   const { getFeaturedProducts, featuredProducts, screenLoading, } = useProductStore()
-  const { getCartProducts } = useCartStore()
   const { user, } = useUserStore();
+  const { addToCart, cartItems, getCartProducts } = useCartStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
+
     getFeaturedProducts();
     if (user) {
       getCartProducts();
     }
   }, [])
+  const handleAddToCart = (productId) => {
+    if (!user) {
+      toast("Login to proceed with cart")
+      navigate('/login');
+      return;
+    }
+    if (cartItems.some(item => item.productId === productId)) {
+      navigate("/cart")
+      return;
+    }
+    // Start loading the button for the specific product
+    setLoadingProducts((prev) => [...prev, productId]);
+
+    addToCart(productId).finally(() => {
+      // After adding to cart, remove loading for the specific product
+      setLoadingProducts((prev) => prev.filter(id => id !== productId));
+    });
+  }
 
   return (
     <div className="w-full min-h-screen bg-slate-950 text-white px-20 ">
@@ -129,6 +149,12 @@ const HomePage = () => {
                         <h3 className="text-xl font-semibold mb-1">{product.name}</h3>
                         <p className="text-pink-400 font-bold">${product.price}</p>
                       </div>
+                      <button
+                        onClick={() => { handleAddToCart(product._id) }}
+                        className="mt-2 w-[80%] mx-auto mb-6 bg-pink-600 hover:bg-pink-700 text-white font-semibold py-2 px-4 rounded-xl transition duration-300 cursor-pointer flex items-center justify-center"
+                      >
+                        Add to Cart
+                      </button>
 
                     </div>
                   ))}

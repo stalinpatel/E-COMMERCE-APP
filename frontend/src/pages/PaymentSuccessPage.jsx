@@ -3,6 +3,7 @@ import { CheckCircle2 } from "lucide-react";
 import { useCartStore } from '../store/useCartStore';
 import { formatDateTime } from "../utils/formatDateTime"
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const PaymentSuccessPage = () => {
     const navigate = useNavigate();
@@ -29,7 +30,7 @@ const PaymentSuccessPage = () => {
                     Thank you for your purchase! Your payment has been confirmed.
                 </p>
 
-                <div className="text-left space-y-2 text-sm">
+                <div className="text-left space-y-2 text-sm pb-8">
                     <div className="flex justify-between">
                         <span className="font-semibold text-gray-400">Order ID:</span>
                         <span>{orderId}</span>
@@ -56,9 +57,11 @@ const PaymentSuccessPage = () => {
                     </div>
                 </div>
 
-                <button className="mt-8 bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition-all">
+                <Link
+                    to={"/orders"}
+                    className="mt-16 bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition-all">
                     Go to Orders
-                </button>
+                </Link>
             </div>
         </div>
     );

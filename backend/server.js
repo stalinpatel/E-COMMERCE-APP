@@ -21,7 +21,7 @@ app.use("/api/cart", cartRoutes); // DONE
 app.use("/api/coupons", couponRoutes); // DONE
 app.use("/api/payments", paymentRoutes); // DONE
 app.use("/api/analytics", analyticsRoutes); // DONE
-app.use("/api/orders", orderRoutes);
+app.use("/api/orders", orderRoutes); // DONE
 app.listen(5000, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
   connectDB();

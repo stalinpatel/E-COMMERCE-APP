@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
 import { PlusCircle, ShoppingBasket, BarChart, TicketPercent } from "lucide-react"
 import { motion } from "framer-motion"
 import CreateProductForm from '../components/CreateProductForm';
@@ -15,12 +14,17 @@ const AdminPage = () => {
         { id: "coupons", label: "Coupons", icon: TicketPercent },
         { id: "analytics", label: "Analytics", icon: BarChart },
     ]
-    const [activeTab, setActiveTab] = useState("create")
+    const savedTab = localStorage.getItem("admin-tab") || "create";
+    const [activeTab, setActiveTab] = useState(savedTab)
     const { getAllProducts } = useProductStore();
 
     useEffect(() => {
         getAllProducts();
     }, []);
+
+    useEffect(() => {
+        localStorage.setItem("admin-tab", activeTab)
+    }, [activeTab])
 
 
 

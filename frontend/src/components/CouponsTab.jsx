@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { TicketPercent, Edit, Trash2, ToggleLeft, ToggleRight, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import PinkButtonSpinner from "../components/PinkButtonSpinner"
+import PinkButtonSpinner from "../components/skeletonsAndLoders/PinkButtonSpinner"
 import { useCouponStore } from '../store/useCouponStore';
 import AddCouponModal from './AddCouponModal';
 import EditCouponModal from "./EditCouponModal"
-import CouponTableSkeleton from "./skeletons/CouponTableSkeleton"
+import CouponTableSkeleton from "./skeletonsAndLoders/CouponTableSkeleton"
 
 
 const CouponsTab = () => {

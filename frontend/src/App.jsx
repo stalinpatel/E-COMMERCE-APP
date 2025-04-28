@@ -9,7 +9,7 @@ import AdminPage from "./pages/AdminPage";
 import ToasterComponent from "./components/ToasterComponent"
 import { useUserStore } from "./store/useUserStore";
 import { useEffect } from "react";
-import LoadingSpinner from "./components/LoadingSpinner";
+import LoadingSpinner from "./components/skeletonsAndLoders/LoadingSpinner";
 import CartPage from "./pages/CartPage";
 import OrdersPage from "./pages/OrdersPage";
 import PaymentSuccessPage from "./pages/PaymentSuccessPage";

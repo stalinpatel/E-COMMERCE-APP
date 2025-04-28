@@ -4,7 +4,7 @@ import { UserPlus, Mail, Lock, User, ArrowRight } from "lucide-react"
 import { motion } from "framer-motion"
 import { useUserStore } from '../store/useUserStore';
 import { useNavigate } from "react-router-dom";
-import ButtonLoader from "../components/ButtonLoader"
+import ButtonLoader from "../components/skeletonsAndLoders/ButtonLoader"
 
 
 const SignUpPage = () => {

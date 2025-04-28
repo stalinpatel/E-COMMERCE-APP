@@ -2,11 +2,10 @@ import React, { useEffect } from 'react';
 import { Trash2, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useProductStore } from '../store/useProductStore';
-import LoadingSpinner from "../components/LoadingSpinner";
+import LoadingSpinner from "../components/skeletonsAndLoders/LoadingSpinner";
 
 const ProductsList = () => {
 
-  // 🔁 Updated from `products` to `allProducts`
   const { screenLoading, allProducts, toggleFeaturedProduct, deleteProduct } = useProductStore();
 
   const handleFeatureClick = (id) => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import PinkButtonSpinner from "./PinkButtonSpinner"
+import PinkButtonSpinner from "../components/skeletonsAndLoders/PinkButtonSpinner"
 import { useCouponStore } from '../store/useCouponStore';
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';

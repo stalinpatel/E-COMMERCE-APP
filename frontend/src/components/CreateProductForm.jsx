@@ -4,7 +4,7 @@ import { PlusCircle, Upload, Loader, Cross } from 'lucide-react';
 import { motion } from "framer-motion"
 import { set } from 'mongoose';
 import { useProductStore } from '../store/useProductStore';
-import ButtonLoader from "../components/ButtonLoader"
+import ButtonLoader from "../components/skeletonsAndLoders/ButtonLoader"
 
 
 

@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import axios from "../lib/axios";
-import { Users, Package, ShoppingCart, DollarSign } from "lucide-react";
+import { Users, Package, ShoppingCart, IndianRupee } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 const AnalyticsTab = () => {
@@ -40,7 +40,7 @@ const AnalyticsTab = () => {
         <AnalyticsCard title="Total Users" value={analyticsData.users.toLocaleString()} icon={Users} color="from-cyan-500 to-cyan-700" />
         <AnalyticsCard title="Total Products" value={analyticsData.products.toLocaleString()} icon={Package} color="from-violet-500 to-indigo-700" />
         <AnalyticsCard title="Total Sales" value={analyticsData.totalSales.toLocaleString()} icon={ShoppingCart} color="from-emerald-500 to-emerald-700" />
-        <AnalyticsCard title="Total Revenue" value={`$${analyticsData.totalRevenue.toLocaleString()}`} icon={DollarSign} color="from-lime-500 to-lime-700" />
+        <AnalyticsCard title="Total Revenue" value={`₹${analyticsData.totalRevenue.toLocaleString()}`} icon={IndianRupee} color="from-lime-500 to-lime-700" />
       </div>
 
       <motion.div
@@ -93,7 +93,7 @@ const AnalyticsCard = ({ title, value, icon: Icon, color }) => (
     <div className={`p-6 bg-gradient-to-br ${color} h-full`}>
       <div className="relative z-10">
         <p className="text-gray-300 text-xs font-semibold uppercase">{title}</p>
-        <h3 className="text-white text-4xl font-bold mt-2">{value}</h3>
+        <h3 className="text-white text-2xl font-bold mt-2">{value}</h3>
       </div>
       <div className="absolute right-4 bottom-4 opacity-30">
         <Icon className="w-20 h-20" />

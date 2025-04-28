@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useProductStore } from '../store/useProductStore';
-import ProductCardSkeleton from '../components/ProductCardSkeleton';
+import ProductCardSkeleton from '../components/skeletonsAndLoders/ProductCardSkeleton';
 import { useCartStore } from '../store/useCartStore';
 import { useUserStore } from "../store/useUserStore"
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-import ButtonLoader from "../components/ButtonLoader"
+import ButtonLoader from "../components/skeletonsAndLoders/ButtonLoader"
 
 const CategoryPage = () => {
 

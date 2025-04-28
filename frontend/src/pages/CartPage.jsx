@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useCartStore } from '../store/useCartStore';
 import { motion } from "framer-motion"
 import { Trash2, CrossIcon } from 'lucide-react';
-import CartPageSkeleton from "../components/skeletons/CartPageSkeleton"
-import PinkButtonSpinner from "../components/PinkButtonSpinner"
+import CartPageSkeleton from "../components/skeletonsAndLoders/CartPageSkeleton"
+import PinkButtonSpinner from "../components/skeletonsAndLoders/PinkButtonSpinner"
 import NoCartItemsFound from '../components/NoCartItemsFound';
 import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
-import ButtonLoader from "../components/ButtonLoader"
+import ButtonLoader from "../components/skeletonsAndLoders/ButtonLoader"
 
 const loadScript = (url) => {
     return new Promise((resolve) => {

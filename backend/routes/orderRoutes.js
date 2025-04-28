@@ -4,6 +4,6 @@ import { getAllOrders } from "../controllers/getAllOrders.js";
 
 const router = express.Router();
 
-router.get("/", protectRoute, getAllOrders);
+router.get("/", protectRoute, getAllOrders); // DONE
 
 export default router;

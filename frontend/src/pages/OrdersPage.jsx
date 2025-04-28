@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import { useUserStore } from "../store/useUserStore"
+import LoadingSpinner from '../components/skeletonsAndLoders/LoadingSpinner';
 
 const OrdersPage = () => {
-    const { getAllOrders, orders } = useUserStore();
+    const { getAllOrders, orders, loadingOrderss } = useUserStore();
+
     useEffect(() => {
         getAllOrders();
-        console.log('Orders :', orders);
     }, [])
 
 
@@ -32,14 +32,26 @@ const OrdersPage = () => {
                 return 'bg-gray-600 text-gray-100';
         }
     };
+    // Calculate original price
+    const originalPrice = (order) => {
+        const total = order.items.reduce((itemAcc, item) => {
+            return itemAcc + (item.price * item.quantity);
+        }, 0);
+        return total;
+    };
 
-    if (orders.length === 0) {
+    if (loadingOrderss) {
+        return <LoadingSpinner />
+    }
+
+    if (!loadingOrderss && orders.length === 0) {
         return (
             <>
                 <h3 className="text-2xl text-center text-gray-400 py-10 font-bold mb-8">No orders yet</h3>
             </>
         )
     }
+
     return (
         <div className="min-h-screen bg-slate-950 text-white p-8">
             <div className="max-w-6xl mx-auto">
@@ -47,7 +59,6 @@ const OrdersPage = () => {
 
                 {orders.map((order) => {
                     const subtotal = order.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-
                     return (
                         <div key={order._id} className="bg-slate-800 rounded-lg p-6 mb-6 shadow-lg">
                             {/* Order header */}
@@ -103,6 +114,10 @@ const OrdersPage = () => {
                             {/* Payment summary */}
                             <div className="bg-slate-900 rounded-lg p-4">
                                 <div className="max-w-xs ml-auto space-y-2">
+                                    <div className="flex justify-between font-bold">
+                                        <span>Original Price </span>
+                                        <span>₹{originalPrice(order).toFixed(2)}</span>
+                                    </div>
                                     {order.coupon && (
                                         <div className="flex justify-between">
 
