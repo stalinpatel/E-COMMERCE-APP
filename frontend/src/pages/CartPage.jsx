@@ -125,120 +125,119 @@ const CartPage = () => {
         return <NoCartItemsFound />
     }
     return (
-        <div className="min-h-screen text-white px-6 py-4 w-[90%] mx-auto">
-            <h2 className="text-4xl font-bold text-pink-500 mb-8 text-center">Your Cart</h2>
-
-            <div className="flex flex-col lg:flex-row gap-8">
+        <div className="min-h-screen text-white px-2 py-4 md:w-[90%] w-full mx-auto">
+            <h2 className="text-xl md:text-4xl font-bold text-pink-500 mb-4 mt-2 md:mb-8 text-center ">Your Cart</h2>
+            <div className="flex flex-col lg:flex-row gap-4 md:gap-8">
                 {/* Cart Items - Left */}
-                <div className="flex-1 space-y-6">
+                <div className="flex-1 space-y-2 md:space-y-6">
                     {cartItems.map((item) => (
                         <motion.div
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.5 }}
                             key={item.productId}
-                            className="flex items-center bg-slate-800 rounded-2xl shadow-md p-4 sm:p-6 gap-6"
+                            className="flex  bg-slate-800 rounded-xl md:rounded-2xl shadow-md p-2 md:p-4 gap-2"
                         >
                             <img
                                 src={item.image}
                                 alt={item.name}
-                                className="w-32 h-28 object-cover rounded-xl cursor-pointer"
+                                className="w-20 h-20 sm:w-26 sm:h-26 md:w-32 md:h-32 object-cover rounded-xl cursor-pointer transitional duration-200 ease-in-out"
                             />
 
-                            <div className="flex-1">
-                                <div className="flex justify-between items-center">
-                                    <h3 className="text-2xl font-semibold cursor-pointer">{item.name}</h3>
-                                    <div className="flex items-center space-x-2">
-                                        <button onClick={() => decreaseByOne(item)} className="bg-pink-500 hover:bg-pink-600 pb-1.5 text-white w-8 h-8 flex items-center justify-center rounded-full shadow-md text-xl cursor-pointer">
-                                            −
-                                        </button>
-                                        <input
-                                            onChange={(e) => handleQuantityChange(item.productId, Number(e.target.value))}
-                                            type="text"
-                                            inputMode='numeric'
-                                            pattern='[0-9]*'
-                                            className="text-lg font-medium w-12 text-center border-none outline-none bg-transparent"
-                                            value={item.quantity}
-                                        />
-                                        <button onClick={() => increaseByOne(item)} className="bg-pink-500 hover:bg-pink-600 pb-1.5 text-white w-8 h-8 flex items-center justify-center rounded-full shadow-md text-xl cursor-pointer">
-                                            +
-                                        </button>
-                                    </div>
+                            <div className="flex flex-1 justify-between flex-col pl-2 pb-2">
+                                <h3 className="text-base sm:text-lg md:text-xl lg:text-2xl font-semibold cursor-pointer">{item.name}</h3>
+                                <div className="flex items-center   md:space-x-2 ">
+                                    <button onClick={() => decreaseByOne(item)} className=" bg-pink-500 hover:bg-pink-600 pb-1 md:pb-1.5 text-white w-4 h-4 md:w-8 md:h-8 flex items-center justify-center rounded-full shadow-md text-xl cursor-pointer">
+                                        <span className='text-xl md:text-4xl'>-</span>
+                                    </button>
+                                    <input
+                                        onChange={(e) => handleQuantityChange(item.productId, Number(e.target.value))}
+                                        type="text"
+                                        inputMode='numeric'
+                                        pattern='[0-9]*'
+                                        className=" text-xs md:text-lg font-medium w-6 md:w-12 text-center border-none outline-none bg-transparent"
+                                        value={item.quantity}
+                                    />
+                                    <button onClick={() => increaseByOne(item)} className="bg-pink-500 hover:bg-pink-600 pb-1 md:pb-1.5 text-white w-4 h-4 md:w-8 md:h-8 flex items-center justify-center rounded-full shadow-md text-xl cursor-pointer">
+                                        <span className='text-lg md:text-4xl'>+</span>
+                                    </button>
                                 </div>
-
-                                <div className="flex justify-between mt-4">
-                                    <p className="text-pink-400 font-medium">Price: ₹ {item.price}</p>
-                                    <p className="text-white font-semibold">Total: ₹ {item.price * item.quantity}</p>
-                                </div>
+                                <p className="text-pink-400 font-medium text-xs sm:text-sm md:text-xl">
+                                    <span className='hidden sm:inline-block'>Price:&nbsp;</span>
+                                    ₹{item.price}</p>
                             </div>
-
-                            {/* Clean Delete Button */}
-                            <button
-                                onClick={() => handleDelete(item.productId)}
-                                className="ml-auto self-center text-pink-400 hover:text-red-500 hover:bg-slate-700 p-2 rounded-full transition-all cursor-pointer"
-                                title="Remove Item"
-                            >
-                                {deletingItemId === item.productId ? (
-                                    <PinkButtonSpinner />
-                                ) : (
-                                    <Trash2 size={20} />
-                                )}
-                            </button>
+                            <div className="flex flex-col  items-center justify-between pb-2">
+                                {/* Clean Delete Button */}
+                                <button
+                                    onClick={() => handleDelete(item.productId)}
+                                    className="ml-auto self-center text-pink-400 hover:text-red-500 hover:bg-slate-700 p-2 rounded-full transition-all cursor-pointer"
+                                    title="Remove Item"
+                                >
+                                    {deletingItemId === item.productId ? (
+                                        <PinkButtonSpinner />
+                                    ) : (
+                                        <Trash2 size={20} />
+                                    )}
+                                </button>
+                                <p className="text-white font-semibold text-xs sm:text-sm md:text-xl">Total: ₹ {item.price * item.quantity}</p>
+                            </div>
                         </motion.div>
                     ))}
                 </div>
 
                 {/* Right Panel - Summary & Coupon */}
-                <div className="w-full lg:w-[350px] space-y-6">
+                <div className="w-full lg:w-[350px] space-y-2 md:space-y-4 lg:space-y-6">
                     {/* Coupon Panel */}
                     <motion.div
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.5 }}
-                        className="bg-slate-800 p-6 rounded-2xl shadow-md space-y-4">
-                        <h4 className="text-xl font-semibold text-white">Have a Coupon?</h4>
-                        <div className='relative'>
-                            <input
-                                type="text"
-                                placeholder="Enter Code"
-                                value={inputCode}
-                                onChange={(e) => setInputCode(e.target.value)}
-                                className="w-full px-4 py-2 rounded-xl bg-slate-700 text-white outline-none"
-                                disabled={couponApplied.isVerified}
-                            />
-                            {couponApplied.isVerified && (
-                                <p className="text-green-400 text-xs mt-1 ml-1">Coupon applied </p>
-                            )}
+                        className="bg-slate-800 p-4 md:p-6 rounded-2xl shadow-md space-y-4">
+                        <h4 className="text-base sm:text-lg md:text-xl font-semibold text-white">Have a Coupon?</h4>
+                        <div className='flex lg:flex-col w-full items-center lg:gap-y-2 gap-x-2 lg:gap-x-0'>
+                            <div className='relative flex-1 lg:w-full'>
+                                <input
+                                    type="text"
+                                    placeholder="Enter Code"
+                                    value={inputCode}
+                                    onChange={(e) => setInputCode(e.target.value)}
+                                    className="w-full px-4 py-2  rounded-xl bg-slate-700 text-sm lg:text-base text-white outline-none"
+                                    disabled={couponApplied.isVerified}
+                                />
 
+                                <button
+                                    onClick={handleRemoveCoupon}
+                                    className={`${couponApplied.isVerified ? "block" : "hidden"}`}
+                                >
+                                    <CrossIcon className='absolute scale-80 sm:scale-90 md:scale-100 fill-red-600 rotate-45 top-2 right-2 font-light cursor-pointer hover:scale-104 active:scale-110 ' />
+                                </button>
+
+                            </div>
                             <button
-                                onClick={handleRemoveCoupon}
-                                className={`${couponApplied.isVerified ? "block" : "hidden"}`}
-                            >
-                                <CrossIcon className='absolute fill-red-600 rotate-45 top-2 right-2 font-light cursor-pointer hover:scale-104 active:scale-110 ' />
+                                onClick={() => handleCouponApply(inputCode)}
+                                disabled={!inputCode || couponApplied.isVerified}
+                                className={`cursor-pointer  lg:w-full   font-bold py-2 px-4 rounded-xl text-sm sm:text-lg md:text-base  whitespace-nowrap transition-all ${couponApplied.code ? "cursor-default bg-pink-950 text-gray-400" : "text-white bg-pink-600 hover:bg-pink-700"}`}>
+                                {couponApplied.isVerified ? "Applied" : "Apply Code"}
                             </button>
-
                         </div>
+                        {couponApplied.isVerified && (
+                            <p className="text-green-400 text-xs  ml-1">Coupon applied </p>
+                        )}
 
-                        <button
-                            onClick={() => handleCouponApply(inputCode)}
-                            disabled={!inputCode || couponApplied.isVerified}
-                            className={`cursor-pointer w-full   font-bold py-2 px-4 rounded-2xl transition-all ${couponApplied.code ? "cursor-default bg-pink-950 text-gray-400" : "text-white bg-pink-600 hover:bg-pink-700"}`}>
-                            {couponApplied.isVerified ? "Applied" : "Apply Code"}
-                        </button>
 
                         {/* Scrollable coupon list */}
                         <div className="text-sm text-pink-300">
-                            <p className="mb-2">Available Coupons:</p>
-                            <div className="max-h-[180px] overflow-y-auto space-y-4 pr-2 scrollbar-hide">
+                            <p className="mb-2 ">Available Coupons:</p>
+                            <div className="max-h-[180px] overflow-y-auto space-y-4  scrollbar-hide">
                                 {
                                     coupons.map((coupon) => {
                                         return (
                                             coupon.isActive &&
                                             <div key={coupon.code} className="flex justify-between items-start border border-dotted border-pink-400 p-3 rounded-xl">
                                                 <div className="space-y-1">
-                                                    <p className="text-white font-medium">{coupon.code}</p>
-                                                    <p className="text-pink-300 text-sm">Expires: {coupon.expirationDate}</p>
-                                                    <p className="text-green-400 text-sm">Discount: {coupon.discountPercentage}%</p>
+                                                    <p className="text-white font-medium text-sm sm:text-base ">{coupon.code}</p>
+                                                    <p className="text-pink-300 text-xs sm:text-sm">Expires: {coupon.expirationDate}</p>
+                                                    <p className="text-green-400 text-xs sm:text-sm">Discount: {coupon.discountPercentage}%</p>
                                                 </div>
                                                 <button
                                                     disabled={couponApplied.code === coupon.code}
@@ -246,7 +245,7 @@ const CartPage = () => {
                                                         setInputCode(coupon.code)
                                                         handleCouponApply(coupon.code)
                                                     }}
-                                                    className={`"ml-4  border-1 border-dashed   text-white text-sm px-3 py-1.5 rounded-xl font-semibold  pb-2 ${couponApplied.code === coupon.code ? "cursor-not-allowed opacity-40" : " hover:bg-pink-700 cursor-pointer"}`}>
+                                                    className={`"ml-4  border-1 border-dashed   text-white text-xs sm:text-sm px-3 py-1.5 rounded-xl font-semibold  pb-2 ${couponApplied.code === coupon.code ? "cursor-not-allowed opacity-40" : " hover:bg-pink-700 cursor-pointer"}`}>
                                                     {couponApplied.code === coupon.code ? "Applied" : "Apply Code"}
                                                 </button>
                                             </div>
@@ -264,21 +263,24 @@ const CartPage = () => {
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.5 }}
-                        className="bg-slate-800 p-6 rounded-2xl shadow-md space-y-4">
-                        <h4 className="text-xl font-semibold text-white">Order Summary</h4>
-                        <div className="flex justify-between text-pink-400">
+                        className="bg-slate-800 p-4 md:p-6 rounded-xl shadow-md space-y-4 transition-all duration-200 ease-in-out">
+                        <h4 className="text-lg md:text-xl font-semibold text-white">Order Summary</h4>
+                        <div className="flex justify-between text-pink-400 text-sm sm:text-base">
                             <span>Original Price:</span>
                             <span>₹ {totalPrice.toFixed(2)}</span>
                         </div>
-                        <div className="flex justify-between text-gray-400 font-semibold text-sm">
-                            <span>Coupon:</span>
-                            <span>{(discount ? discount : totalPrice * couponApplied.discountPercentage * 0.01).toFixed(2) || 0}</span>
-                        </div>
-                        <div className="flex justify-between text-white font-bold text-lg">
+                        {
+                            couponApplied.isVerified &&
+                            <div className="flex justify-between text-gray-400 font-semibold text-xs sm:text-sm md:text-base">
+                                <span>Coupon:</span>
+                                <span>{(discount ? discount : totalPrice * couponApplied.discountPercentage * 0.01).toFixed(2) || 0}</span>
+                            </div>
+                        }
+                        <div className="flex justify-between text-white font-bold text-base sm:text-lg md:text-xl">
                             <span>Total:</span>
                             <span>₹ {(couponApplied.isVerified ? discountedPrice : totalPrice).toFixed(2)}</span>
                         </div>
-                        <button onClick={handleCheckout} className="w-full mt-4 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-2xl transition-all flex items-center justify-center">
+                        <button onClick={handleCheckout} className="w-full mt-4 text-xs sm:text-sm md:text-base bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-2xl transition-all flex items-center justify-center">
                             {checkoutButtonLoading ? <ButtonLoader /> : "Proceed to Checkout"}
                         </button>
                         <Link to={"/"}>
@@ -291,7 +293,6 @@ const CartPage = () => {
                 </div>
             </div>
         </div>
-
     );
 };
 

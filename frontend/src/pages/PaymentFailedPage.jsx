@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { XCircle } from 'lucide-react';
 import { useCartStore } from '../store/useCartStore';
+import { useEffect } from 'react';
 export default function PaymentFailedPage() {
     const navigate = useNavigate();
     const { orderDetails: { orderId }, discountedPrice } = useCartStore();
@@ -12,8 +13,8 @@ export default function PaymentFailedPage() {
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-slate-900 text-white px-6 py-12">
             <XCircle className="text-red-500" size={80} />
-            <h1 className="text-4xl font-bold mt-6 text-red-400">Payment Failed</h1>
-            <p className="mt-4 text-center text-gray-400 max-w-md">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mt-6 text-red-400">Payment Failed</h1>
+            <p className="mt-4 text-sm sm:text-base md:text-lg  text-center text-gray-400 max-w-md">
                 Oops! Something went wrong while processing your payment. Don't worry — it happens to the best of us.
                 Your order is still safe. Try again or come back later.
             </p>

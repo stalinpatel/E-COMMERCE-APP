@@ -71,7 +71,7 @@ const HomePage = () => {
   }, [])
 
   return (
-    <div className="w-full min-h-screen bg-slate-950 text-white md:px-20 ">
+    <div className="w-full   min-h-screen bg-slate-950 text-white sm:px-10 md:px-20 lg:px-32 xl:px-40 ">
       {/* Categories */}
       <section className="py-4 px-6">
 
@@ -121,7 +121,7 @@ const HomePage = () => {
           {/* Contact */}
           <div className="text-center md:text-right">
             <h4 className="text-md md:text-xl font-semibold mb-2">Contact: 6371352739</h4>
-            <p className="text-sm text-slate-400">Email: <a href="mailto:stalinpatel023@example.com" className="underline hover:text-indigo-400 transition-colors duration-200">stalinpatel023@example.com</a></p>
+            <p className="text-sm text-slate-400">Email: <a href="mailto:stalinpatel023@gmail.com" className="underline hover:text-indigo-400 transition-colors duration-200">stalinpatel023@gmail.com</a></p>
           </div>
         </div>
 

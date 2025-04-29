@@ -82,21 +82,27 @@ export const updateQuantity = async (req, res, next) => {
 // DONE
 export const getCartProducts = async (req, res, next) => {
   try {
-    const user = await req.user.populate("cartItems.productId");
+    const user = req.user;
+    if (!user) {
+      return res.status(400).json({ message: "No user data found" });
+    }
 
-    const cartItems = user.cartItems.map((item) => ({
-      productId: item.productId._id,
-      price: item.productId.price,
-      description: item.productId.description,
-      image: item.productId.image,
-      category: item.productId.category,
-      name: item.productId.name,
-      isFeatured: item.productId.isFeatured,
-      quantity: item.quantity,
-    }));
+    await user.populate("cartItems.productId");
+    const cartItems = user.cartItems
+      .filter((item) => item.productId) // 💥 skip cart items where productId is null
+      .map((item) => ({
+        productId: item.productId._id,
+        price: item.productId.price,
+        description: item.productId.description,
+        image: item.productId.image,
+        category: item.productId.category,
+        name: item.productId.name,
+        isFeatured: item.productId.isFeatured,
+        quantity: item.quantity,
+      }));
     return res.status(200).json(cartItems);
   } catch (error) {
-    console.log("Error in getCartProducts controller ", error.message);
+    console.log("Error in getCartProducts controller ", error);
     return res
       .status(500)
       .json({ message: "Internal Server Error" + error.message });
@@ -168,4 +174,4 @@ export const emptyCart = async (req, res, next) => {
       .status(500)
       .json({ message: "Internal Server Error: " + error.message });
   }
-};  
+};

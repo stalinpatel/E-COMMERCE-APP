@@ -7,10 +7,10 @@ import { useCartStore } from '../store/useCartStore';
 
 const AdminNav = ({ handleLogout, cartItemCount, orders }) => {
   return (
-    <nav className="flex justify-between items-center p-2 sm:p-3 md:p-4 bg-slate-900 shadow-lg fixed top-0 left-0 w-full z-50">
+    <nav className="flex justify-between items-center p-3 sm:p-3 md:p-4 bg-slate-900 shadow-lg fixed top-0 left-0 w-full z-50">
       {/* Logo */}
       <div className="text-md pl-2 md:pl-0 md:text-xl font-bold text-pink-500">
-        <Link to="/" className='salsa-regular'>STYLIK</Link>
+        <Link to="/" className='salsa-regular '>STYLIK</Link>
       </div>
 
       {/* Navigation Links */}
@@ -67,7 +67,7 @@ const AdminNav = ({ handleLogout, cartItemCount, orders }) => {
 
 const UserNav = ({ handleLogout, cartItemCount, orders }) => {
   return (
-    <nav className="flex justify-between items-center p-2 md:p-4 bg-slate-900 shadow-lg fixed top-0 left-0 w-full z-50">
+    <nav className="flex justify-between items-center p-3 md:p-4 bg-slate-900 shadow-lg fixed top-0 left-0 w-full z-50">
       {/* Logo */}
       <div className="text-md pl-2 md:pl-0 md:text-xl font-bold text-pink-500">
         <Link to="/" className='salsa-regular'>STYLIK</Link>
@@ -115,7 +115,7 @@ const UserNav = ({ handleLogout, cartItemCount, orders }) => {
 
 const GuestNav = () => {
   return (
-    <nav className="flex justify-between items-center p-2 md:p-4 bg-slate-900 shadow-lg fixed top-0 left-0 w-full z-50">
+    <nav className="flex justify-between items-center p-3 md:p-4 bg-slate-900 shadow-lg fixed top-0 left-0 w-full z-50">
       {/* Logo */}
       <div className="text-md pl-2 md:pl-0 md:text-xl font-bold text-pink-500">
         <Link to="/" className='salsa-regular'>STYLIK</Link>

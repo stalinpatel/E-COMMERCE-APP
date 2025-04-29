@@ -36,12 +36,12 @@ const SignUpPage = () => {
 
   return (
     <>
-      <div className="flex pt-10 flex-col items-center min-h-screen bg-slate-950 text-white ">
+      <div className="flex pt-2 sm:pt-5 md:pt-10 flex-col items-center min-h-screen bg-slate-950 text-white ">
         <motion.h2
           initial={{ opacity: 0, y: -20 }} // Start state
           animate={{ opacity: 1, y: 0 }} // End state
           transition={{ duration: 0.8, delay: 0.2 }} // Duration of animation
-          className="text-3xl font-bold text-center text-pink-500 py-6"
+          className="text-2xl md:text-3xl font-bold text-center text-pink-500 py-6"
         >
           Create an account
         </motion.h2>
@@ -49,7 +49,7 @@ const SignUpPage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 2, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="bg-slate-900 p-8 rounded-lg shadow-lg w-96"
+          className="bg-slate-900 p-4 sm:p-8 rounded-lg shadow-lg w-[90%]  sm:w-96"
         >
           <form onSubmit={handleSubmit} className="mt-4">
             <div className="mb-4 relative">

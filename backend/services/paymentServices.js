@@ -24,7 +24,10 @@ export const getCartTotalWithLatestPrices = async (cartItems) => {
     const cartWithPrice = await Promise.all(
       cartItems.map(async (item) => {
         const product = await Product.findById(item.productId).select("price");
-        if (!product) throw new Error(`Product not found: ${item.productId}`);
+        if (!product) {
+          console.warn(`Missing product: ${item.productId}`);
+          return null;
+        }
         return {
           productId: item.productId,
           quantity: item.quantity,

@@ -12,21 +12,21 @@ const PaymentSuccessPage = () => {
 
     useEffect(() => {
         if (!orderId) {
-            navigate("/")
+            navigate("/", { replace: true })
         }
     }, [])
     return (
-        <div className="min-h-screen bg-gray-900 flex flex-col justify-center items-center p-6 text-white">
+        <div className="min-h-screen bg-gray-900 flex flex-col justify-center items-center p-6  text-white">
             {/* Confetti Boom 🎉 */}
 
-            <div className="bg-gray-800 rounded-2xl shadow-xl p-8 max-w-md w-full text-center">
-                <div className="flex justify-center mb-4">
+            <div className="bg-gray-800 rounded-2xl shadow-xl p-4 pb-6 md:p-8 max-w-md w-full text-center">
+                <div className="flex justify-center ">
                     <CheckCircle2 className="text-green-400" width={64} height={64} />
                 </div>
-                <h2 className="text-2xl font-bold text-white mb-2">
+                <h2 className=" text-lg sm:text-xl md:text-2xl font-bold text-white mb-2">
                     Payment Successful 🎉
                 </h2>
-                <p className="text-gray-300 mb-6">
+                <p className="text-gray-400 text-xs sm:text-sm md:text-base mb-6">
                     Thank you for your purchase! Your payment has been confirmed.
                 </p>
 
@@ -59,7 +59,7 @@ const PaymentSuccessPage = () => {
 
                 <Link
                     to={"/orders"}
-                    className="mt-16 bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition-all">
+                    className="mt-16  bg-green-800 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition-all">
                     Go to Orders
                 </Link>
             </div>
