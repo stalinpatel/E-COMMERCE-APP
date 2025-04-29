@@ -1,6 +1,7 @@
 import cookieParser from "cookie-parser";
 import "dotenv/config";
 import path from "path";
+import { fileURLToPath } from "url";
 import express from "express";
 import { connectDB } from "./lib/db.js";
 import analyticsRoutes from "./routes/analytics.route.js";
@@ -13,7 +14,8 @@ import productRoutes from "./routes/product.route.js";
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-const __dirname = path.resolve();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(express.json()); //allows you to parse the body of the request
 app.use(cookieParser());
@@ -26,13 +28,15 @@ app.use("/api/payments", paymentRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/orders", orderRoutes);
 
+// Serve frontend in production
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "/frontend/dist")));
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
-  });
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"))
+  );
 }
-app.listen(5000, () => {
+
+app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
   connectDB();
 });
