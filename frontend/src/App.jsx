@@ -19,7 +19,6 @@ import PaymentFailedPage from "./pages/PaymentFailedPage";
 function App() {
 
   const { user, checkAuth, checkingAuth } = useUserStore();
-
   useEffect(() => {
     checkAuth();
     console.log('User details :', user);

@@ -12,6 +12,7 @@ export const useUserStore = create(
       checkingAuth: true,
       orders: [],
       loadingOrders: true,
+      razorpay_key_id: "",
 
       clearStorage: () => {
         set({
@@ -20,10 +21,19 @@ export const useUserStore = create(
           loading: false,
           checkingAuth: false,
           loadingOrders: false,
+          razorpay_key_id: "",
         });
         localStorage.removeItem("user-storage");
       },
-
+      loadEvnironmentVariable: async () => {
+        try {
+          const res = await axios.get("/api/config/razorpay");
+          const key = res.data.key;
+          set({ razorpay_key_id: key });
+        } catch (error) {
+          console.log("Error getting the razor pay key id", error);
+        }
+      },
       signup: async ({ name, email, password, confirmPassword }) => {
         set({ loading: true });
         if (password !== confirmPassword) {
@@ -74,6 +84,7 @@ export const useUserStore = create(
       checkAuth: async () => {
         set({ checkingAuth: true });
         try {
+          get().loadEvnironmentVariable();
           const res = await axios.get("/auth/profile");
           set({ user: res.data.user, checkingAuth: false });
         } catch (error) {

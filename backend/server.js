@@ -27,6 +27,9 @@ app.use("/api/coupons", couponRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/orders", orderRoutes);
+app.get("/api/config/razorpay", (req, res) => {
+  res.json({ key: process.env.RAZORPAY_KEY_ID });
+});
 
 // Serve frontend in production
 if (process.env.NODE_ENV === "production") {
