@@ -44,7 +44,7 @@ const CategoryPage = () => {
 
 
     return (
-        <div className="min-h-screen w-full bg-slate-950 text-white px-4 sm:px-6 md:px-10 py-6 sm:py-9 md:py-12 lg:py-16">
+        <div className="min-h-screen w-full    bg-slate-950 text-white px-4  sm:px-10 md:px-20 lg:px-32 py-6 sm:py-9 md:py-12 lg:py-16 transition-all duration-200">
             <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center text-pink-500 mb-4 sm:mb-6 md:mb-8 lg:mb-12 capitalize transition-all duration-200 ">
                 {category} Collection
             </h2>
@@ -73,7 +73,7 @@ const CategoryPage = () => {
                                     <img
                                         src={product.image}
                                         alt={product.name}
-                                        className="w-full h-44 sm:h-52 md:h-60 object-cover"
+                                        className="w-full h-44 sm:h-52 md:h-60  object-cover"
                                     />
                                     <div className="p-2 md:p-4 space-y-1 md:space-y-2">
                                         <h3 className="text-sm sm:text-base md:text-xl font-semibold whitespace-nowrap overflow-hidden text-ellipsis">

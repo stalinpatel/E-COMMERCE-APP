@@ -53,7 +53,7 @@ const ProductsList = () => {
                   />
                   <span>{product.name}</span>
                 </td>
-                <td className="p-3">{product.price} ₹</td>
+                <td className="p-3">₹{product.price} </td>
                 <td className="p-3">{product.category}</td>
                 <td className="p-3">{product.stock}</td>
                 <td className="p-3">
