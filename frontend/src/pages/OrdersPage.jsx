@@ -55,14 +55,11 @@ const OrdersPage = () => {
     return (
         <div className="min-h-screen bg-slate-950 text-white p-4 sm:p-8 ">
             <div className="max-w-6xl mx-auto">
-                <h1 className="text-xl sm:text-2xl font-bold px-2 mb-6 sm:mb-8">Your Orders</h1>
-
+                <h1 className="text-xl sm:text-2xl font-bold px-2 py-3 mb-2 sm:mb-8">Your Orders</h1>
                 <div className="space-y-4 sm:space-y-6">
                     {orders.map((order) => {
                         const subtotal = order.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-
                         return (
-
                             <div key={order._id} className="bg-slate-800 rounded-lg p-4 sm:p-6 shadow-lg">
                                 {/* Order header - responsive layout */}
                                 <div className="flex flex-col sm:flex-row justify-between gap-2 md:gap-4 sm:items-center mb-4 pb-4 border-b border-slate-400">

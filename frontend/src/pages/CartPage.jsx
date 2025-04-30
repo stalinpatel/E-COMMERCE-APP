@@ -159,7 +159,7 @@ const CartPage = () => {
                                         value={item.quantity}
                                     />
                                     <button onClick={() => increaseByOne(item)} className="bg-pink-500 hover:bg-pink-600 pb-1 md:pb-1.5 text-white w-4 h-4 md:w-8 md:h-8 flex items-center justify-center rounded-full shadow-md text-xl cursor-pointer">
-                                        <span className='text-lg md:text-4xl'>+</span>
+                                        <span className='text-base md:text-4xl'>+</span>
                                     </button>
                                 </div>
                                 <p className="text-pink-400 font-medium text-xs sm:text-sm md:text-xl">
