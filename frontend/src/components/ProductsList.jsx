@@ -25,7 +25,7 @@ const ProductsList = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay: 0.2 }}
-      className="bg-slate-900 p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-[80%] mx-auto"
+      className="bg-slate-900 p-4 sm:p-6 rounded-lg shadow-lg px-2 py-4 sm:w-[90%] lg:w-[80%] w-full  mx-auto transition-all duration-200 ease-in-out"
     >
       <h2 className="text-2xl font-bold text-center text-pink-500 mb-6">Products</h2>
 
@@ -44,12 +44,12 @@ const ProductsList = () => {
           </thead>
           <tbody>
             {allProducts.map(product => (
-              <tr key={product._id} className="bg-slate-800 rounded-lg  ">
+              <tr key={product._id} className="bg-slate-800 rounded-lg text-base sm:text-md md:text-xl">
                 <td className="flex items-center gap-3 p-3 rounded-l-lg">
                   <img
                     src={product.image}
                     alt={product.name}
-                    className="w-10 h-10 object-cover rounded-full border border-pink-400"
+                    className="w-10 h-10 md:w-16 md:h-16 object-cover rounded-full border border-pink-400"
                   />
                   <span>{product.name}</span>
                 </td>

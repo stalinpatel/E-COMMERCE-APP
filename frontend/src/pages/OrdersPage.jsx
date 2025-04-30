@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { useUserStore } from "../store/useUserStore";
 import LoadingSpinner from '../components/skeletonsAndLoders/LoadingSpinner';
+import PinkButtonSpinner from "../components/skeletonsAndLoders/PinkButtonSpinner"
 
 const OrdersPage = () => {
-    const { getAllOrders, orders, loadingOrderss } = useUserStore();
+    const { getAllOrders, orders, loadingOrders } = useUserStore();
 
     useEffect(() => {
         getAllOrders();
@@ -40,11 +41,17 @@ const OrdersPage = () => {
         }, 0);
     };
 
-    if (loadingOrderss) {
-        return <LoadingSpinner />;
+    if (loadingOrders) {
+        return (
+            <>
+                <div className='min-h-screen scale-150 w-full flex items-center justify-center'>
+                    <PinkButtonSpinner />
+                </div>
+            </>
+        )
     }
 
-    if (!loadingOrderss && orders.length === 0) {
+    if (orders.length === 0) {
         return (
             <div className="min-h-screen bg-slate-950 flex items-center justify-center">
                 <h3 className="text-2xl text-center text-gray-400 font-bold">No orders yet</h3>

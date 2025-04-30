@@ -52,6 +52,11 @@ const CartPage = () => {
     };
 
     const handleQuantityChange = async (productId, quantity) => {
+        if (quantity < 1 || isNaN(quantity)) return;
+        if (quantity > 20) {
+            quantity = 20
+            toast.error("Max quantity reached")
+        }
         updateQuantity(productId, quantity)
     }
 
@@ -280,7 +285,7 @@ const CartPage = () => {
                             <span>Total:</span>
                             <span>₹ {(couponApplied.isVerified ? discountedPrice : totalPrice).toFixed(2)}</span>
                         </div>
-                        <button onClick={handleCheckout} className="w-full mt-4 text-xs sm:text-sm md:text-base bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-2xl transition-all flex items-center justify-center">
+                        <button disabled={cartItems.length === 0 || checkoutButtonLoading} onClick={handleCheckout} className="w-full mt-4 text-xs sm:text-sm md:text-base bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-2xl transition-all flex items-center justify-center">
                             {checkoutButtonLoading ? <ButtonLoader /> : "Proceed to Checkout"}
                         </button>
                         <Link to={"/"}>
