@@ -147,34 +147,73 @@ export const useUserStore = create(
   )
 );
 
+// axios.interceptors.response.use(
+//   (response) => {
+//     return response;
+//   },
+//   async (error) => {
+//     const originalRequest = error.config;
+//     const { user } = useUserStore.getState();
+//     if (error.response?.status === 401 && !originalRequest._retry && user) {
+//       originalRequest._retry = true;
+
+//       try {
+//         if (refreshPromise) {
+//           await refreshPromise;
+//           return axios(originalRequest);
+//         }
+
+//         refreshPromise = useUserStore.getState().refreshToken();
+//         await refreshPromise;
+//         refreshPromise = null;
+
+//         console.log("✅ Access token refreshed, retrying original request...");
+
+//         return axios(originalRequest);
+//       } catch (error) {
+//         await useUserStore.getState().logout();
+//         toast.error("Session Expired! Please login again.", { id: "expired" });
+
+//         return Promise.reject(error);
+//       }
+//     }
+
+//     return Promise.reject(error);
+//   }
+// );
 axios.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    const { user } = useUserStore.getState();
-    if (error.response?.status === 401 && !originalRequest._retry && user) {
+    const { user, refreshToken, logout } = useUserStore.getState();
+
+    // If refresh-token endpoint fails, or no user is logged in, reject immediately
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      user &&
+      !originalRequest.url.includes("/auth/refresh-token")
+    ) {
       originalRequest._retry = true;
 
       try {
-        if (refreshPromise) {
-          await refreshPromise;
-          return axios(originalRequest);
+        if (!refreshPromise) {
+          refreshPromise = refreshToken(); // store.refreshToken returns a promise
         }
 
-        refreshPromise = useUserStore.getState().refreshToken();
         await refreshPromise;
         refreshPromise = null;
 
-        console.log("✅ Access token refreshed, retrying original request...");
-
+        console.log("✅ Access token refreshed. Retrying request...");
         return axios(originalRequest);
-      } catch (error) {
-        await useUserStore.getState().logout();
-        toast.error("Session Expired! Please login again.", { id: "expired" });
+      } catch (refreshError) {
+        refreshPromise = null;
 
-        return Promise.reject(error);
+        console.error("❌ Refresh failed. Logging out...", refreshError);
+        await logout();
+        toast.error("Session expired! Please login again.", { id: "expired" });
+
+        return Promise.reject(refreshError);
       }
     }
 

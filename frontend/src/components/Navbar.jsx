@@ -129,12 +129,12 @@ const GuestNav = () => {
         >
           Home
         </Link>
-        <Link to="/signup" className="bg-pink-500 gap-x-1 px-1 text-xs rounded-lg text-white hover:bg-pink-600 flex items-center w-18 md:w-auto justify-center scale-90 md:scale-100 transition-all duration-200">
-          <span className='scale-90'>Sign Up</span>
+        <Link to="/signup" className="bg-pink-500 gap-x-1 px-1 sm:px-2 sm:py-1 whitespace-nowrap text-xs sm:text-sm md:text-base rounded-lg text-white hover:bg-pink-600 flex items-center w-18 sm:w-22 md:w-auto justify-center scale-90 md:scale-100 transition-all duration-200">
+          <span className='scale-90 sm:scale-100'>Sign Up</span>
           <UserPlus width={16} />
         </Link>
-        <Link to="/login" className="bg-pink-500 gap-x-1 px-1 text-xs rounded-lg text-white hover:bg-pink-600 flex items-center w-18 md:w-auto justify-center scale-90 md:scale-100 transition-all duration-200">
-          <span className='scale-90'>Login</span>
+        <Link to="/login" className="bg-pink-500 gap-x-1 px-1 sm:px-2 sm:py-1 whitespace-nowrap text-xs sm:text-sm md:text-base rounded-lg text-white hover:bg-pink-600 flex items-center w-18 sm:w-22 md:w-auto justify-center scale-90 md:scale-100 transition-all duration-200">
+          <span className='scale-90 sm:scale-100'>Login</span>
           <LogIn width={16} />
         </Link>
       </div>
