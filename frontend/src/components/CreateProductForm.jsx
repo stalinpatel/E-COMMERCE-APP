@@ -8,7 +8,7 @@ import ButtonLoader from "../components/skeletonsAndLoders/ButtonLoader"
 
 
 
-const categories = ["jean", "t-shirt", "shoe", "glasses", "jacket", "suit", "bag"]
+const categories = ["jeans", "t-shirts", "shoes", "glasses", "jackets", "suits", "bags","rzp_test"]
 
 const CreateProductForm = () => {
     const initialState = {

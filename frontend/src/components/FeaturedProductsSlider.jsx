@@ -111,7 +111,7 @@ const FeaturedProductsSlider = () => {
                                                     <h3 className="text-xl font-semibold mb-1 whitespace-nowrap overflow-hidden text-ellipsis">
                                                         {product.name}
                                                     </h3>
-                                                    <p className="text-pink-400 font-bold">${product.price}</p>
+                                                    <p className="text-pink-400 font-bold">₹{product.price}</p>
                                                 </div>
                                                 <button
                                                     onClick={() => handleAddToCart(product._id)}

@@ -68,7 +68,6 @@ export const createProduct = async (req, res, next) => {
   try {
     const { name, description, price, category, stock } = req.body;
     const localPath = req.file?.path;
-    console.log("file isss:", req.file);
     let cloudinaryResponse = null;
     if (localPath) {
       cloudinaryResponse = await cloudinary.uploader.upload(localPath, {

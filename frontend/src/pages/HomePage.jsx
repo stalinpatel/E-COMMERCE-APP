@@ -10,13 +10,13 @@ const HomePage = () => {
     {
       id: 1,
       name: 'Jeans',
-      slug: 'jean',
+      slug: 'jeans',
       imageUrl: './jeans.png',
     },
     {
       id: 2,
       name: 'Shoes',
-      slug: 'shoe',
+      slug: 'shoes',
       imageUrl: './shoes.png',
     },
     {
@@ -28,25 +28,25 @@ const HomePage = () => {
     {
       id: 4,
       name: 'Jackets',
-      slug: 'jacket',
+      slug: 'jackets',
       imageUrl: './jackets.png',
     },
     {
       id: 5,
       name: 'Suits',
-      slug: 'suit',
+      slug: 'suits',
       imageUrl: './suits.png',
     },
     {
       id: 6,
       name: 'Bags',
-      slug: 'bag',
+      slug: 'bags',
       imageUrl: './bags.png',
     },
     {
       id: 7,
       name: 'T-shirts',
-      slug: 't-shirt',
+      slug: 't-shirts',
       imageUrl: './tshirts.png',
     },
     {
@@ -54,7 +54,12 @@ const HomePage = () => {
       name: "Accessories",
       slug: "accessories",
       imageUrl: "./accessories.png"
-
+    },
+    {
+      id: 9,
+      name: "Payment Testing",
+      slug: "rzp_test",
+      imageUrl: "./rzp_test.png"
     }
   ];
 
