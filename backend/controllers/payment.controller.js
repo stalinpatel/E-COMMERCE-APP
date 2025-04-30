@@ -14,12 +14,21 @@ const razorpayInstance = createRazorpayInstance();
 export const createOrder = async (req, res) => {
   try {
     const { amount } = req.body;
+
     const amountInPaise = Math.round(Number(amount) * 100);
     const options = {
       amount: amountInPaise,
       currency: "INR",
-      receipt: `receipt_${Date.now()}`,
+      // receipt: `receipt_${Date.now()}`,
+      receipt: "test_receipt_1234",
+      notes: {
+        purpose: "E-commerce checkout",
+      },
     };
+    // console.log("amount :", amount);
+    // console.log("Parsed amountInPaise:", amountInPaise);
+    // console.log("Creating Razorpay order with:", options);
+
     const order = await razorpayInstance.orders.create(options);
     return res.status(200).json({ order, success: true });
     // return res
