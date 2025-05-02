@@ -26,7 +26,7 @@ const loadScript = (url) => {
 
 const CartPage = () => {
     const { cartItems, getCartProducts, removeAllFromCart, totalPrice, discountedPrice, discount, screenLoading, checkoutButtonLoading, updateQuantity, getAllCoupons, coupons, validateCoupon, couponApplied, removeCoupon, createOrder, verifyPayment } = useCartStore();
-    const { razorpay_key_id, loadEnvironmentVariable } = useUserStore();
+    const { razorpay_key_id, loadEnvironmentVariable, user } = useUserStore();
     const navigate = useNavigate();
     const [deletingItemId, setDeletingItemId] = useState(null);
     const [inputCode, setInputCode] = useState("")
@@ -87,6 +87,8 @@ const CartPage = () => {
     }
 
     const handleCheckout = async () => {
+        console.log("name", user.name, "email", user.email,);
+
         try {
             const res = await createOrder();
             if (res.success) {
@@ -104,9 +106,9 @@ const CartPage = () => {
                         }
                     },
                     "prefill": {
-                        "name": 'Stalin',
-                        "email": 'stalin@example.com',
-                        "contact": '6371352739'
+                        "name": user.name,
+                        "email": user.email,
+                        "contact": '9999999999'
 
                     },
                     "theme": {
