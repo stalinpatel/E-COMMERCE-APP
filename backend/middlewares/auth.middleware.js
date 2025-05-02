@@ -6,7 +6,7 @@ export const protectRoute = async (req, res, next) => {
     const accessToken = req.cookies.accessToken;
     if (!accessToken) {
       return res
-        .status(401)
+        .status(440)
         .json({ message: "Unauthorized - No access token provided" });
     }
     try {
@@ -20,9 +20,7 @@ export const protectRoute = async (req, res, next) => {
       return next();
     } catch (error) {
       if (error.name == "TokenExpiredError") {
-        return res
-          .status(401)
-          .json({ message: "Unauthorized - access token expired" });
+        return res.status(440).json({ message: "Access token expired" });
       }
       throw error;
     }

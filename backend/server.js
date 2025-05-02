@@ -28,6 +28,7 @@ app.use("/api/payments", paymentRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/orders", orderRoutes);
 app.get("/api/config/razorpay", (req, res) => {
+  const key = process.env.RAZORPAY_KEY_ID;
   res.json({ key: process.env.RAZORPAY_KEY_ID });
 });
 
@@ -47,4 +48,3 @@ app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
   connectDB();
 });
-

@@ -71,7 +71,6 @@ export const signup = async (req, res, next) => {
 export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    console.log("Login endpoint hit by user :", email);
     const user = await User.findOne({ email });
 
     // CHECK IF USER EXISTS OR NOT
@@ -165,6 +164,7 @@ export const refreshToken = async (req, res, next) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
+      // maxAge: 15 * 60 * 1000,
       maxAge: 15 * 60 * 1000,
     });
 
@@ -179,7 +179,6 @@ export const refreshToken = async (req, res, next) => {
 };
 
 export const getProfile = async (req, res, next) => {
-  console.log("getProfile hitted");
   try {
     const accessToken = req.cookies.accessToken;
     if (!accessToken) {

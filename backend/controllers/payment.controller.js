@@ -15,12 +15,14 @@ export const createOrder = async (req, res) => {
   try {
     const { amount } = req.body;
 
+    // console.log("Amount received in createOrder :", amount);
+
     const amountInPaise = Math.round(Number(amount) * 100);
     const options = {
       amount: amountInPaise,
       currency: "INR",
-      // receipt: `receipt_${Date.now()}`,
-      receipt: "test_receipt_1234",
+      receipt: `receipt_${Date.now()}`,
+      // receipt: "test_receipt_1234",
       notes: {
         purpose: "E-commerce checkout",
       },
@@ -30,6 +32,8 @@ export const createOrder = async (req, res) => {
     // console.log("Creating Razorpay order with:", options);
 
     const order = await razorpayInstance.orders.create(options);
+    // console.log("Order is :", order);
+
     return res.status(200).json({ order, success: true });
     // return res
     //   .status(500)

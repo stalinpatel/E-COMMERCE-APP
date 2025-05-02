@@ -249,6 +249,8 @@ export const useCartStore = create((set, get) => ({
       set({ checkoutButtonLoading: true });
       const { discountedPrice, evaluateCartTotals, totalPrice } = get();
       await evaluateCartTotals();
+
+      // console.log("Order created with :", discountedPrice || totalPrice);
       const res = await axios.post("/payments/create-order", {
         amount: discountedPrice || totalPrice,
       });

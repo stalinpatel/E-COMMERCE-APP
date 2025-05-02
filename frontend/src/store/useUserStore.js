@@ -25,15 +25,18 @@ export const useUserStore = create(
         });
         localStorage.removeItem("user-storage");
       },
-      loadEvnironmentVariable: async () => {
+      loadEnvironmentVariable: async () => {
         try {
-          const res = await axios.get("/api/config/razorpay");
+          const res = await axios.get("/config/razorpay");
           const key = res.data.key;
           set({ razorpay_key_id: key });
+          return { success: true };
         } catch (error) {
-          console.log("Error getting the razor pay key id", error);
+          console.log("Error getting the Razorpay key ID", error);
+          return false;
         }
       },
+
       signup: async ({ name, email, password, confirmPassword }) => {
         set({ loading: true });
         if (password !== confirmPassword) {
@@ -84,7 +87,7 @@ export const useUserStore = create(
       checkAuth: async () => {
         set({ checkingAuth: true });
         try {
-          get().loadEvnironmentVariable();
+          get().loadEnvironmentVariable();
           const res = await axios.get("/auth/profile");
           set({ user: res.data.user, checkingAuth: false });
         } catch (error) {
@@ -146,51 +149,19 @@ export const useUserStore = create(
   )
 );
 
-// axios.interceptors.response.use(
-//   (response) => {
-//     return response;
-//   },
-//   async (error) => {
-//     const originalRequest = error.config;
-//     const { user } = useUserStore.getState();
-//     if (error.response?.status === 401 && !originalRequest._retry && user) {
-//       originalRequest._retry = true;
-
-//       try {
-//         if (refreshPromise) {
-//           await refreshPromise;
-//           return axios(originalRequest);
-//         }
-
-//         refreshPromise = useUserStore.getState().refreshToken();
-//         await refreshPromise;
-//         refreshPromise = null;
-
-//         console.log("✅ Access token refreshed, retrying original request...");
-
-//         return axios(originalRequest);
-//       } catch (error) {
-//         await useUserStore.getState().logout();
-//         toast.error("Session Expired! Please login again.", { id: "expired" });
-
-//         return Promise.reject(error);
-//       }
-//     }
-
-//     return Promise.reject(error);
-//   }
-// );
 axios.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
     const { user, refreshToken, logout } = useUserStore.getState();
 
+    const isAccessTokenExpired = error.response?.status === 440;
+
     // If refresh-token endpoint fails, or no user is logged in, reject immediately
     if (
-      error.response?.status === 401 &&
-      !originalRequest._retry &&
+      isAccessTokenExpired &&
       user &&
+      !originalRequest._retry &&
       !originalRequest.url.includes("/auth/refresh-token")
     ) {
       originalRequest._retry = true;
@@ -200,11 +171,15 @@ axios.interceptors.response.use(
           refreshPromise = refreshToken(); // store.refreshToken returns a promise
         }
 
-        await refreshPromise;
+        const result = await refreshPromise;
         refreshPromise = null;
 
-        console.log("✅ Access token refreshed. Retrying request...");
-        return axios(originalRequest);
+        if (result?.success) {
+          console.log("✅ Access token refreshed. Retrying request...");
+          return axios(originalRequest);
+        } else {
+          throw new Error("Refresh failed");
+        }
       } catch (refreshError) {
         refreshPromise = null;
 

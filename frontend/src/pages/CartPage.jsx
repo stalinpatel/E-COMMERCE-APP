@@ -8,6 +8,7 @@ import NoCartItemsFound from '../components/NoCartItemsFound';
 import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import ButtonLoader from "../components/skeletonsAndLoders/ButtonLoader"
+import { useUserStore } from '../store/useUserStore';
 
 const loadScript = (url) => {
     return new Promise((resolve) => {
@@ -25,6 +26,7 @@ const loadScript = (url) => {
 
 const CartPage = () => {
     const { cartItems, getCartProducts, removeAllFromCart, totalPrice, discountedPrice, discount, screenLoading, checkoutButtonLoading, updateQuantity, getAllCoupons, coupons, validateCoupon, couponApplied, removeCoupon, createOrder, verifyPayment } = useCartStore();
+    const { razorpay_key_id, loadEnvironmentVariable } = useUserStore();
     const navigate = useNavigate();
     const [deletingItemId, setDeletingItemId] = useState(null);
     const [inputCode, setInputCode] = useState("")
@@ -32,6 +34,7 @@ const CartPage = () => {
     useEffect(() => {
         getCartProducts();
         getAllCoupons();
+        loadEnvironmentVariable();
     }, []);
 
     useEffect(() => {
@@ -87,7 +90,7 @@ const CartPage = () => {
         try {
             const res = await createOrder();
             if (res.success) {
-                const key = import.meta.env.VITE_RAZORPAY_KEY_ID;
+                const key = razorpay_key_id;
                 const paymentOptions = {
                     "key": key,
                     "amount": res.order.amount,
@@ -111,6 +114,11 @@ const CartPage = () => {
                     }
                 }
                 const razorpayInstance = new Razorpay(paymentOptions);
+                razorpayInstance.on('payment.failed', function (response) {
+                    console.error('Payment failed:', response.error);
+                    toast.error("Payment failed. Please try again.");
+                    navigate("/payment-failed");
+                });
                 razorpayInstance.open();
             } else {
                 navigate("/payment-failed");
@@ -152,19 +160,33 @@ const CartPage = () => {
                             <div className="flex flex-1 justify-between flex-col pl-2 pb-2">
                                 <h3 className="text-base sm:text-lg md:text-xl lg:text-2xl font-semibold cursor-pointer">{item.name}</h3>
                                 <div className="flex items-center   md:space-x-2 ">
-                                    <button onClick={() => decreaseByOne(item)} className=" bg-pink-500 hover:bg-pink-600 pb-1 md:pb-1.5 text-white w-4 h-4 md:w-8 md:h-8 flex items-center justify-center rounded-full shadow-md text-xl cursor-pointer">
-                                        <span className='text-xl md:text-4xl'>-</span>
+                                    <button onClick={() => decreaseByOne(item)} className=" bg-pink-500 hover:bg-pink-600 pb-1 md:pb-2.5   text-white w-4 h-4 md:w-8 md:h-8 flex items-center justify-center rounded-full shadow-md text-xl cursor-pointer">
+                                        <span className='text-xl md:text-4xl '>-</span>
                                     </button>
                                     <input
-                                        onChange={(e) => handleQuantityChange(item.productId, Number(e.target.value))}
+                                        onChange={(e) => {
+                                            const val = parseInt(e.target.value);
+                                            if (!isNaN(val) && val >= 1 && val <= 20) {
+                                                handleQuantityChange(item.productId, val);
+                                            }
+                                        }}
+                                        onBlur={() => {
+                                            // If the input is empty or invalid on blur, reset to 1
+                                            if (!item.quantity || item.quantity < 1) {
+                                                handleQuantityChange(item.productId, 1);
+                                            }
+                                        }}
+                                        min="1"
+                                        max="20"
                                         type="text"
                                         inputMode='numeric'
                                         pattern='[0-9]*'
                                         className=" text-xs md:text-lg font-medium w-6 md:w-12 text-center border-none outline-none bg-transparent"
                                         value={item.quantity}
                                     />
-                                    <button onClick={() => increaseByOne(item)} className="bg-pink-500 hover:bg-pink-600 pb-1 md:pb-1.5 text-white w-4 h-4 md:w-8 md:h-8 flex items-center justify-center rounded-full shadow-md text-xl cursor-pointer">
-                                        <span className='text-base md:text-4xl'>+</span>
+
+                                    <button onClick={() => increaseByOne(item)} className="bg-pink-500 hover:bg-pink-600 pb-1 md:pb-2 text-white w-4 h-4 md:w-8 md:h-8 flex items-center justify-center rounded-full shadow-md text-xl cursor-pointer">
+                                        <span className='text-base md:text-4xl scale-80  '>+</span>
                                     </button>
                                 </div>
                                 <p className="text-pink-400 font-medium text-xs sm:text-sm md:text-xl">

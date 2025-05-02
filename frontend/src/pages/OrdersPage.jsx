@@ -67,7 +67,7 @@ const OrdersPage = () => {
                     {orders.map((order) => {
                         const subtotal = order.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
                         return (
-                            <div key={order._id} className="bg-slate-800 rounded-lg p-4 sm:p-6 shadow-lg">
+                            <div key={order.razorpayPaymentId} className="bg-slate-800 rounded-lg p-4 sm:p-6 shadow-lg">
                                 {/* Order header - responsive layout */}
                                 <div className="flex flex-col sm:flex-row justify-between gap-2 md:gap-4 sm:items-center mb-4 pb-4 border-b border-slate-400">
                                     <div className='flex flex-row md:flex-col items-center  '>
@@ -96,7 +96,7 @@ const OrdersPage = () => {
                                 {/* Order items - responsive layout */}
                                 <div className="space-y-4  sm:space-y-6 mb-4 sm:mb-6">
                                     {order.items.map((item) => (
-                                        <div key={`${order._id}-${item._id || item.name}`} className="flex gap-3 sm:gap-4 border-b border-slate-700 pb-2">
+                                        <div key={`${order.razorpayPaymentId}-${item._id || item.name}`} className="flex gap-3 sm:gap-4 border-b border-slate-700 pb-2">
                                             <img
                                                 src={item.image}
                                                 alt={item.name}
